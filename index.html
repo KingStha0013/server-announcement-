@@ -11,7 +11,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f9f9f9;
     color: #333;
-    padding-bottom: 20px;
+    line-height: 1.5;
   }
 
   header {
@@ -57,10 +57,10 @@
     border-radius: 10px;
     padding: 15px 18px;
     box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
     flex-direction: column;
     gap: 6px;
+    transition: transform 0.3s, box-shadow 0.3s;
     animation: fadeIn 0.6s ease;
   }
 
@@ -131,12 +131,13 @@ function getClassForType(title){
 async function loadLiveAnnouncements(){
   const loader = document.getElementById("loader");
   const container = document.getElementById("announcements");
-  
+
+  // Clear old announcements
   container.innerHTML = "";
   loader.innerText = "Loading live announcements…";
 
   try{
-    const res = await fetch(jsonURL + "?t=" + new Date().getTime()); // prevent cache
+    const res = await fetch(jsonURL + "?t=" + new Date().getTime());
     if(!res.ok) throw new Error("Network error");
     const data = await res.json();
     loader.innerText = "";
@@ -146,6 +147,7 @@ async function loadLiveAnnouncements(){
       return;
     }
 
+    // Sort priority: urgent > info > success
     data.announcements.sort((a,b)=>{
       const priority={"urgent":3,"info":2,"success":1};
       return priority[getClassForType(b.title)]-priority[getClassForType(a.title)];
@@ -171,7 +173,7 @@ async function loadLiveAnnouncements(){
 
 window.addEventListener("DOMContentLoaded", ()=>{
   loadLiveAnnouncements();
-  setInterval(loadLiveAnnouncements, 60000); // refresh every 60s
+  setInterval(loadLiveAnnouncements, 60000);
 });
 </script>
 
