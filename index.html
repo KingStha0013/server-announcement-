@@ -1,1 +1,123 @@
-h
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Server Announcements</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1a1a1a, #333);
+      color: #fff;
+      text-align: center;
+    }
+    header {
+      background: #111;
+      padding: 20px;
+      border-bottom: 2px solid #444;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    header h1 {
+      color: gold;
+      margin: 0;
+      text-shadow: 0 0 8px gold;
+    }
+    #brand {
+      font-size: 14px;
+      color: lightgray;
+    }
+    main {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .announcement-board {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .announcement {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: left;
+    }
+    .announcement:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    }
+    .announcement h3 {
+      color: #ffd700;
+      margin-top: 0;
+    }
+    .announcement p {
+      margin: 5px 0;
+    }
+    footer {
+      margin-top: 30px;
+      padding: 10px;
+      background: #111;
+      border-top: 2px solid #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>⚔ Magic Spell Addon Server ⚔</h1>
+    <p id="brand">Made by KingStha0013</p>
+  </header>
+
+  <main>
+    <section class="announcement-board">
+      <h2>📢 Latest Announcements</h2>
+      <div id="announcements">Loading announcements…</div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 KingStha0013 Server</p>
+  </footer>
+
+  <script>
+    // GitHub Raw JSON URL
+    const jsonURL = "https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json";
+
+    // Fetch announcements
+    fetch(jsonURL)
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(data => {
+        const container = document.getElementById("announcements");
+        container.innerHTML = "";
+        
+        if (!data.announcements || data.announcements.length === 0) {
+          container.innerHTML = "<p>No announcements yet.</p>";
+          return;
+        }
+
+        data.announcements.forEach(item => {
+          const box = document.createElement("div");
+          box.className = "announcement";
+          box.innerHTML = `
+            <h3>${item.title}</h3>
+            <p><strong>Date:</strong> ${item.date}</p>
+            <p><strong>Location:</strong> ${item.location}</p>
+            <p>${item.message}</p>
+          `;
+          container.appendChild(box);
+        });
+      })
+      .catch(error => {
+        document.getElementById("announcements").innerHTML = "<p>Error loading announcements.</p>";
+        console.error("Error fetching announcements:", error);
+      });
+  </script>
+</body>
+</html>
