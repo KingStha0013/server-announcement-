@@ -1,0 +1,11 @@
+{
+  "event": {
+    "date": "After Exams",
+    "location": "PvP Arena",
+    "message": "Hey everyone! 🎉 A special Magic Spell Event is coming right after exams! Join us at the PvP Arena 🏟️. The Champion will earn ONE Magical Spell 🔮 and will also be announced in Discord 🎉"
+  },
+  "winner": {
+    "name": "No winner yet",
+    "message": "Stay tuned for the winner announcement!"
+  }
+}
