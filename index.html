@@ -5,103 +5,121 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>नेपाल आधिकारिक Magic Spell Addon सूचना</title>
 <style>
-  * { box-sizing: border-box; margin:0; padding:0; }
+* { box-sizing: border-box; margin:0; padding:0; }
 
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f9f9f9;
-    color: #333;
-    line-height: 1.5;
-  }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f2f2f2;
+  color: #333;
+  line-height: 1.6;
+}
 
-  header {
-    background-color: #d32f2f;
-    color: white;
-    text-align: center;
-    padding: 18px 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+header {
+  background: linear-gradient(90deg, #d32f2f, #ff5252);
+  color: #fff;
+  text-align: center;
+  padding: 25px 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 4px solid #fff;
+}
 
-  header h1 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: bold;
-    text-shadow: 0 0 5px rgba(0,0,0,0.3);
-  }
+header h1 {
+  font-size: 28px;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(0,0,0,0.3);
+}
 
-  main {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 0 10px;
-  }
+main {
+  max-width: 900px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
 
-  #loader {
-    text-align: center;
-    font-weight: bold;
-    color: #d32f2f;
-    margin-bottom: 15px;
-  }
+#loader {
+  text-align: center;
+  font-weight: bold;
+  color: #d32f2f;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
 
-  .announcement-board {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
+.announcement-board {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
 
-  .announcement {
-    background-color: #fff;
-    border-left: 6px solid transparent;
-    border-radius: 10px;
-    padding: 15px 18px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    animation: fadeIn 0.6s ease;
-  }
+.announcement {
+  background-color: #fff;
+  border-left: 8px solid transparent;
+  border-radius: 15px;
+  padding: 25px 30px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.7s ease;
+}
 
-  .announcement:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  }
+.announcement:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
 
-  .announcement h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: #d32f2f;
-  }
+.announcement h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #d32f2f;
+}
 
-  .announcement p {
-    font-size: 14px;
-    color: #555;
-  }
+.announcement p {
+  font-size: 16px;
+  color: #555;
+}
 
-  .announcement .date-location {
-    font-size: 12px;
-    color: #777;
-  }
+.announcement .date-location {
+  font-size: 14px;
+  color: #777;
+}
 
-  .urgent { border-left-color: #ff1744; background-color: #fff0f0; animation: rgbGlow 2s infinite; }
-  .info { border-left-color: #1976d2; background-color: #e3f2fd; }
-  .success { border-left-color: #388e3c; background-color: #e8f5e9; }
+.urgent { border-left-color: #ff1744; background-color: #fff0f0; animation: rgbGlow 2s infinite; }
+.info { border-left-color: #1976d2; background-color: #e3f2fd; }
+.success { border-left-color: #388e3c; background-color: #e8f5e9; }
 
-  @keyframes fadeIn { 0% { opacity:0; transform:translateY(8px);} 100%{opacity:1; transform:translateY(0);} }
-  @keyframes rgbGlow {0%{box-shadow:0 0 8px #ff1744;}25%{box-shadow:0 0 12px #ff5252;}50%{box-shadow:0 0 16px #ff4081;}75%{box-shadow:0 0 12px #ff1744;}100%{box-shadow:0 0 8px #ff1744;}}
+@keyframes fadeIn {0%{opacity:0; transform:translateY(10px);}100%{opacity:1; transform:translateY(0);}}
+@keyframes rgbGlow {0%{box-shadow:0 0 12px #ff1744;}25%{box-shadow:0 0 18px #ff5252;}50%{box-shadow:0 0 22px #ff4081;}75%{box-shadow:0 0 18px #ff1744;}100%{box-shadow:0 0 12px #ff1744;}}
 
-  footer { background-color: #d32f2f; color: white; text-align:center; padding:12px; margin-top:20px; font-size:13px; box-shadow:0 -2px 8px rgba(0,0,0,0.2); }
+footer {
+  background: linear-gradient(90deg,#d32f2f,#ff5252);
+  color: white;
+  text-align:center;
+  padding:18px;
+  margin-top:25px;
+  font-size:14px;
+  box-shadow:0 -3px 12px rgba(0,0,0,0.2);
+  border-top: 4px solid #fff;
+}
 
-  @media screen and (max-width: 400px){
-    header h1{font-size:18px;}
-    .announcement{padding:12px 14px;}
-    .announcement h3{font-size:16px;}
-    .announcement p{font-size:13px;}
-    .announcement .date-location{font-size:11px;}
-  }
+@media screen and (max-width: 600px){
+  header h1{font-size:22px;}
+  .announcement{padding:18px 20px;}
+  .announcement h3{font-size:20px;}
+  .announcement p{font-size:14px;}
+  .announcement .date-location{font-size:12px;}
+}
+
+@media screen and (max-width: 400px){
+  header h1{font-size:18px;}
+  .announcement{padding:15px 15px;}
+  .announcement h3{font-size:18px;}
+  .announcement p{font-size:13px;}
+  .announcement .date-location{font-size:11px;}
+}
 </style>
 </head>
 <body>
@@ -132,7 +150,6 @@ async function loadLiveAnnouncements(){
   const loader = document.getElementById("loader");
   const container = document.getElementById("announcements");
 
-  // Clear old announcements
   container.innerHTML = "";
   loader.innerText = "Loading live announcements…";
 
@@ -147,7 +164,6 @@ async function loadLiveAnnouncements(){
       return;
     }
 
-    // Sort priority: urgent > info > success
     data.announcements.sort((a,b)=>{
       const priority={"urgent":3,"info":2,"success":1};
       return priority[getClassForType(b.title)]-priority[getClassForType(a.title)];
