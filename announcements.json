@@ -1,11 +1,34 @@
 {
-  "event": {
-    "date": "After Exams",
-    "location": "PvP Arena",
-    "message": "Hey everyone! 🎉 A special Magic Spell Event is coming right after exams! Join us at the PvP Arena 🏟️. The Champion will earn ONE Magical Spell 🔮 and will also be announced in Discord 🎉"
-  },
-  "winner": {
-    "name": "No winner yet",
-    "message": "Stay tuned for the winner announcement!"
-  }
+  "announcements": [
+    {
+      "title": "📢 Event Announcement",
+      "date": "After Exams",
+      "location": "PvP Arena",
+      "message": "Hey everyone! 🎉 A special Magic Spell Event is coming right after exams! Join us at the PvP Arena 🏟️. The Champion will earn ONE Magical Spell 🔮 and will also be announced in Discord 🎉"
+    },
+    {
+      "title": "🏆 Winner Announcement",
+      "date": "Coming Soon",
+      "location": "Discord + PvP Arena",
+      "message": "The champion will be revealed soon… stay tuned! 🔔"
+    },
+    {
+      "title": "⚡ Server Update",
+      "date": "Today",
+      "location": "Server Hub",
+      "message": "We’ve updated the Magic Spell system with new abilities ✨. Try them out in the hub!"
+    },
+    {
+      "title": "🎉 Double XP Weekend",
+      "date": "This Weekend",
+      "location": "All Worlds",
+      "message": "Earn double XP on all activities this weekend! Don’t miss out 💎"
+    },
+    {
+      "title": "🛠 Maintenance Notice",
+      "date": "Next Friday",
+      "location": "Whole Server",
+      "message": "The server will be down for maintenance for 1 hour while we apply performance fixes."
+    }
+  ]
 }
