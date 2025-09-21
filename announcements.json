@@ -1,34 +1,22 @@
 {
   "announcements": [
     {
-      "title": "📢 Event Announcement",
+      "title": "🛠 Server Maintenance",
+      "date": "Today",
+      "location": "Whole Server",
+      "message": "The server is currently under maintenance. Please wait until it’s back online. Thank you for your patience!"
+    },
+    {
+      "title": "📢 Event Reminder",
       "date": "After Exams",
       "location": "PvP Arena",
-      "message": "Hey everyone! 🎉 A special Magic Spell Event is coming right after exams! Join us at the PvP Arena 🏟️. The Champion will earn ONE Magical Spell 🔮 and will also be announced in Discord 🎉"
+      "message": "Reminder! The Magic Spell Event will start after exams. Make sure to join on time! The champion will receive ONE magical spell and will be announced on Discord."
     },
     {
-      "title": "🏆 Winner Announcement",
-      "date": "Coming Soon",
-      "location": "Discord + PvP Arena",
-      "message": "The champion will be revealed soon… stay tuned! 🔔"
-    },
-    {
-      "title": "⚡ Server Update",
-      "date": "Today",
-      "location": "Server Hub",
-      "message": "We’ve updated the Magic Spell system with new abilities ✨. Try them out in the hub!"
-    },
-    {
-      "title": "🎉 Double XP Weekend",
-      "date": "This Weekend",
-      "location": "All Worlds",
-      "message": "Earn double XP on all activities this weekend! Don’t miss out 💎"
-    },
-    {
-      "title": "🛠 Maintenance Notice",
-      "date": "Next Friday",
-      "location": "Whole Server",
-      "message": "The server will be down for maintenance for 1 hour while we apply performance fixes."
+      "title": "✅ Ready for Event",
+      "date": "Tomorrow",
+      "location": "PvP Arena",
+      "message": "The PvP Arena is ready! Prepare your magic spells and gear up for the upcoming event. Let’s have fun and fair play!"
     }
   ]
 }
