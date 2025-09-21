@@ -18,7 +18,7 @@
     background-color: #d32f2f;
     color: white;
     text-align: center;
-    padding: 25px 20px;
+    padding: 18px 15px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     position: sticky;
     top: 0;
@@ -27,51 +27,51 @@
 
   header h1 {
     margin: 0;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: bold;
     text-shadow: 0 0 5px rgba(0,0,0,0.3);
   }
 
   main {
-    max-width: 900px;
-    margin: 25px auto;
-    padding: 0 15px;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 10px;
   }
 
   #loader {
     text-align: center;
     font-weight: bold;
     color: #d32f2f;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 
   .announcement-board {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
   }
 
   .announcement {
     background-color: #fff;
     border-left: 6px solid transparent;
-    border-radius: 12px;
-    padding: 20px 25px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 15px 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    animation: fadeIn 0.7s ease;
+    gap: 6px;
+    animation: fadeIn 0.6s ease;
   }
 
   .announcement:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
   }
 
   .announcement h3 {
     margin: 0;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: #d32f2f;
   }
@@ -82,7 +82,7 @@
   }
 
   .announcement .date-location {
-    font-size: 13px;
+    font-size: 12px;
     color: #777;
   }
 
@@ -90,16 +90,17 @@
   .info { border-left-color: #1976d2; background-color: #e3f2fd; }
   .success { border-left-color: #388e3c; background-color: #e8f5e9; }
 
-  @keyframes fadeIn { 0% { opacity:0; transform:translateY(10px);} 100%{opacity:1; transform:translateY(0);} }
-  @keyframes rgbGlow {0%{box-shadow:0 0 10px #ff1744;}25%{box-shadow:0 0 15px #ff5252;}50%{box-shadow:0 0 20px #ff4081;}75%{box-shadow:0 0 15px #ff1744;}100%{box-shadow:0 0 10px #ff1744;}}
+  @keyframes fadeIn { 0% { opacity:0; transform:translateY(8px);} 100%{opacity:1; transform:translateY(0);} }
+  @keyframes rgbGlow {0%{box-shadow:0 0 8px #ff1744;}25%{box-shadow:0 0 12px #ff5252;}50%{box-shadow:0 0 16px #ff4081;}75%{box-shadow:0 0 12px #ff1744;}100%{box-shadow:0 0 8px #ff1744;}}
 
-  footer { background-color: #d32f2f; color: white; text-align:center; padding:15px; margin-top:25px; font-size:14px; box-shadow:0 -2px 10px rgba(0,0,0,0.2);}
-  @media screen and (max-width: 600px){
-    header h1{font-size:20px;}
-    .announcement{padding:15px 18px;}
-    .announcement h3{font-size:18px;}
+  footer { background-color: #d32f2f; color: white; text-align:center; padding:12px; margin-top:20px; font-size:13px; box-shadow:0 -2px 8px rgba(0,0,0,0.2); }
+
+  @media screen and (max-width: 400px){
+    header h1{font-size:18px;}
+    .announcement{padding:12px 14px;}
+    .announcement h3{font-size:16px;}
     .announcement p{font-size:13px;}
-    .announcement .date-location{font-size:12px;}
+    .announcement .date-location{font-size:11px;}
   }
 </style>
 </head>
@@ -131,12 +132,11 @@ async function loadLiveAnnouncements(){
   const loader = document.getElementById("loader");
   const container = document.getElementById("announcements");
   
-  // Clear old announcements for live-only display
   container.innerHTML = "";
   loader.innerText = "Loading live announcements…";
 
   try{
-    const res = await fetch(jsonURL + "?t=" + new Date().getTime()); // prevent caching
+    const res = await fetch(jsonURL + "?t=" + new Date().getTime()); // prevent cache
     if(!res.ok) throw new Error("Network error");
     const data = await res.json();
     loader.innerText = "";
@@ -146,13 +146,11 @@ async function loadLiveAnnouncements(){
       return;
     }
 
-    // Sort by priority: urgent > info > success
     data.announcements.sort((a,b)=>{
       const priority={"urgent":3,"info":2,"success":1};
       return priority[getClassForType(b.title)]-priority[getClassForType(a.title)];
     });
 
-    // Render live announcements only
     data.announcements.forEach(item=>{
       const typeClass = getClassForType(item.title);
       const box = document.createElement("div");
@@ -171,7 +169,6 @@ async function loadLiveAnnouncements(){
   }
 }
 
-// Auto-load live announcements every 1 minute
 window.addEventListener("DOMContentLoaded", ()=>{
   loadLiveAnnouncements();
   setInterval(loadLiveAnnouncements, 60000); // refresh every 60s
