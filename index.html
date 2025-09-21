@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>सर्भर सूचना - Magic Spell Addon</title>
   <style>
-    /* ===== Body ===== */
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -17,7 +14,6 @@
       color: #333;
     }
 
-    /* ===== Header ===== */
     header {
       background: linear-gradient(90deg, #d32f2f, #b71c1c);
       color: #fff;
@@ -37,7 +33,6 @@
       text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
     }
 
-    /* ===== Main ===== */
     main {
       max-width: 900px;
       margin: 20px auto;
@@ -51,7 +46,6 @@
       text-align: center;
     }
 
-    /* ===== Announcement Board ===== */
     .announcement-board {
       display: flex;
       flex-direction: column;
@@ -92,25 +86,10 @@
       color: #666;
     }
 
-    /* Highlight urgent */
-    .urgent {
-      border-left: 6px solid #ff5722;
-      background-color: #fff3e0;
-    }
+    .urgent { border-left: 6px solid #ff5722; background-color: #fff3e0; }
+    .info { border-left: 6px solid #1976d2; background-color: #e3f2fd; }
+    .success { border-left: 6px solid #388e3c; background-color: #e8f5e9; }
 
-    /* Highlight info */
-    .info {
-      border-left: 6px solid #1976d2;
-      background-color: #e3f2fd;
-    }
-
-    /* Highlight success */
-    .success {
-      border-left: 6px solid #388e3c;
-      background-color: #e8f5e9;
-    }
-
-    /* ===== Footer ===== */
     footer {
       background-color: #d32f2f;
       color: #fff;
@@ -121,29 +100,17 @@
       font-size: 14px;
     }
 
-    /* ===== Animations ===== */
     @keyframes fadeIn {
       0% { opacity: 0; transform: translateY(10px); }
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== Mobile ===== */
     @media screen and (max-width: 600px) {
-      header h1 {
-        font-size: 20px;
-      }
-      .announcement {
-        padding: 15px 18px;
-      }
-      .announcement h3 {
-        font-size: 18px;
-      }
-      .announcement p {
-        font-size: 13px;
-      }
-      .announcement .date-location {
-        font-size: 12px;
-      }
+      header h1 { font-size: 20px; }
+      .announcement { padding: 15px 18px; }
+      .announcement h3 { font-size: 18px; }
+      .announcement p { font-size: 13px; }
+      .announcement .date-location { font-size: 12px; }
     }
   </style>
 </head>
@@ -154,18 +121,15 @@
 
   <main>
     <div id="loader">Loading announcements…</div>
-    <section class="announcement-board" id="announcements">
-      <!-- Announcements injected here -->
-    </section>
+    <section class="announcement-board" id="announcements"></section>
   </main>
 
-  <footer>
-    © 2025 KingStha0013 Server
-  </footer>
+  <footer>© 2025 KingStha0013 Server</footer>
 
   <script>
     const jsonURL = "https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json";
 
+    // Determine class based on announcement title
     function getClassForType(title) {
       title = title.toLowerCase();
       if (title.includes("maintenance") || title.includes("server")) return "urgent";
@@ -174,46 +138,50 @@
       return "";
     }
 
-    function loadAnnouncements() {
+    // Proper fetch with error handling
+    async function loadAnnouncements() {
       const loader = document.getElementById("loader");
       const container = document.getElementById("announcements");
-
       loader.innerText = "Loading announcements…";
       container.innerHTML = "";
 
-      fetch(jsonURL)
-        .then(res => {
-          if (!res.ok) throw new Error("Network error");
-          return res.json();
-        })
-        .then(data => {
-          loader.innerText = "";
+      try {
+        const response = await fetch(jsonURL);
+        if (!response.ok) throw new Error("Network response was not ok");
 
-          if (!data.announcements || data.announcements.length === 0) {
-            container.innerHTML = "<p>No announcements yet.</p>";
-            return;
-          }
+        const data = await response.json();
+        loader.innerText = "";
 
-          data.announcements.forEach(item => {
-            const typeClass = getClassForType(item.title);
-            const box = document.createElement("div");
-            box.className = `announcement ${typeClass}`;
-            box.innerHTML = `
-              <h3>${item.title}</h3>
-              <p class="date-location"><strong>मिति (Date):</strong> ${item.date} | <strong>स्थान (Location):</strong> ${item.location}</p>
-              <p>${item.message}</p>
-            `;
-            container.appendChild(box);
-          });
-        })
-        .catch(err => {
-          loader.innerText = "Failed to load announcements.";
-          container.innerHTML = "<p>Error loading announcements. Try again later.</p>";
-          console.error(err);
+        if (!data.announcements || data.announcements.length === 0) {
+          container.innerHTML = "<p>No announcements yet.</p>";
+          return;
+        }
+
+        // Sort announcements by importance (urgent > info > success)
+        data.announcements.sort((a, b) => {
+          const priority = {"urgent": 3, "info": 2, "success": 1};
+          return priority[getClassForType(b.title)] - priority[getClassForType(a.title)];
         });
+
+        data.announcements.forEach(item => {
+          const typeClass = getClassForType(item.title);
+          const box = document.createElement("div");
+          box.className = `announcement ${typeClass}`;
+          box.innerHTML = `
+            <h3>${item.title}</h3>
+            <p class="date-location"><strong>मिति (Date):</strong> ${item.date} | <strong>स्थान (Location):</strong> ${item.location}</p>
+            <p>${item.message}</p>
+          `;
+          container.appendChild(box);
+        });
+      } catch (error) {
+        loader.innerText = "Failed to load announcements.";
+        container.innerHTML = "<p>Error loading announcements. Try again later.</p>";
+        console.error("Fetch error:", error);
+      }
     }
 
-    // Auto-load on page load
+    // Auto-load on page open
     window.addEventListener("DOMContentLoaded", loadAnnouncements);
   </script>
 </body>
