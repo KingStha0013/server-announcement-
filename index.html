@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Magic Spell Addon</title>
+<title>नेपाल आधिकारिक Magic Spell Addon सूचना</title>
 <style>
   * { box-sizing: border-box; margin:0; padding:0; }
 
@@ -86,52 +86,20 @@
     color: #777;
   }
 
-  /* Types */
-  .urgent {
-    border-left-color: #ff1744;
-    background-color: #fff0f0;
-    animation: rgbGlow 2s infinite;
-  }
+  .urgent { border-left-color: #ff1744; background-color: #fff0f0; animation: rgbGlow 2s infinite; }
+  .info { border-left-color: #1976d2; background-color: #e3f2fd; }
+  .success { border-left-color: #388e3c; background-color: #e8f5e9; }
 
-  .info {
-    border-left-color: #1976d2;
-    background-color: #e3f2fd;
-  }
+  @keyframes fadeIn { 0% { opacity:0; transform:translateY(10px);} 100%{opacity:1; transform:translateY(0);} }
+  @keyframes rgbGlow {0%{box-shadow:0 0 10px #ff1744;}25%{box-shadow:0 0 15px #ff5252;}50%{box-shadow:0 0 20px #ff4081;}75%{box-shadow:0 0 15px #ff1744;}100%{box-shadow:0 0 10px #ff1744;}}
 
-  .success {
-    border-left-color: #388e3c;
-    background-color: #e8f5e9;
-  }
-
-  @keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes rgbGlow {
-    0% { box-shadow: 0 0 10px #ff1744; }
-    25% { box-shadow: 0 0 15px #ff5252; }
-    50% { box-shadow: 0 0 20px #ff4081; }
-    75% { box-shadow: 0 0 15px #ff1744; }
-    100% { box-shadow: 0 0 10px #ff1744; }
-  }
-
-  footer {
-    background-color: #d32f2f;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: 25px;
-    font-size: 14px;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-  }
-
-  @media screen and (max-width: 600px) {
-    header h1 { font-size: 20px; }
-    .announcement { padding: 15px 18px; }
-    .announcement h3 { font-size: 18px; }
-    .announcement p { font-size: 13px; }
-    .announcement .date-location { font-size: 12px; }
+  footer { background-color: #d32f2f; color: white; text-align:center; padding:15px; margin-top:25px; font-size:14px; box-shadow:0 -2px 10px rgba(0,0,0,0.2);}
+  @media screen and (max-width: 600px){
+    header h1{font-size:20px;}
+    .announcement{padding:15px 18px;}
+    .announcement h3{font-size:18px;}
+    .announcement p{font-size:13px;}
+    .announcement .date-location{font-size:12px;}
   }
 </style>
 </head>
@@ -142,7 +110,7 @@
 </header>
 
 <main>
-  <div id="loader">Loading announcements…</div>
+  <div id="loader">Loading live announcements…</div>
   <section class="announcement-board" id="announcements"></section>
 </main>
 
@@ -159,29 +127,32 @@ function getClassForType(title){
   return "";
 }
 
-async function loadAnnouncements(){
+async function loadLiveAnnouncements(){
   const loader = document.getElementById("loader");
   const container = document.getElementById("announcements");
-  loader.innerText = "Loading announcements…";
+  
+  // Clear old announcements for live-only display
   container.innerHTML = "";
+  loader.innerText = "Loading live announcements…";
 
   try{
-    const res = await fetch(jsonURL);
+    const res = await fetch(jsonURL + "?t=" + new Date().getTime()); // prevent caching
     if(!res.ok) throw new Error("Network error");
     const data = await res.json();
     loader.innerText = "";
 
     if(!data.announcements || data.announcements.length===0){
-      container.innerHTML = "<p>No announcements yet.</p>";
+      container.innerHTML = "<p>No live announcements.</p>";
       return;
     }
 
-    // Sort by importance
+    // Sort by priority: urgent > info > success
     data.announcements.sort((a,b)=>{
-      const priority = {"urgent":3,"info":2,"success":1};
-      return priority[getClassForType(b.title)] - priority[getClassForType(a.title)];
+      const priority={"urgent":3,"info":2,"success":1};
+      return priority[getClassForType(b.title)]-priority[getClassForType(a.title)];
     });
 
+    // Render live announcements only
     data.announcements.forEach(item=>{
       const typeClass = getClassForType(item.title);
       const box = document.createElement("div");
@@ -194,16 +165,16 @@ async function loadAnnouncements(){
       container.appendChild(box);
     });
   }catch(err){
-    loader.innerText = "Failed to load announcements.";
-    container.innerHTML = "<p style='color:red;'>Error loading announcements. Try again later.</p>";
+    loader.innerText = "Failed to load live announcements.";
+    container.innerHTML = "<p style='color:red;'>Error fetching announcements.</p>";
     console.error(err);
   }
 }
 
-// Load on page start
+// Auto-load live announcements every 1 minute
 window.addEventListener("DOMContentLoaded", ()=>{
-  loadAnnouncements();
-  setInterval(loadAnnouncements, 180000); // Refresh every 3 minutes
+  loadLiveAnnouncements();
+  setInterval(loadLiveAnnouncements, 60000); // refresh every 60s
 });
 </script>
 
