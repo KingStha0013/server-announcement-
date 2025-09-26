@@ -1,129 +1,355 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Minecraft Server Announcements</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kingamer Server</title>
   <style>
+    :root {
+      --accent: #9333ea;
+      --bg: linear-gradient(135deg, #1e3a8a, #9333ea);
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --text: #f9fafb;
+      --muted: #d1d5db;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: #eee;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text);
+      line-height: 1.6;
     }
-
     header {
-      background: #111;
-      padding: 1rem;
-      text-align: center;
-      color: #00ff99;
-      font-size: 1.5rem;
-      font-weight: bold;
-      border-bottom: 2px solid #00ff99;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     }
-
+    header img.flag {
+      width: 28px;
+      height: auto;
+      border-radius: 3px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.4);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    /* Button row */
+    .header-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.6rem 1rem;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      position: sticky;
+      top: 48px; /* header height */
+      z-index: 9;
+    }
+    .header-buttons button {
+      background: var(--glass-bg);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .header-buttons button:hover {
+      background: rgba(255,255,255,0.3);
+      box-shadow: 0 0 10px var(--accent);
+      transform: translateY(-2px) scale(1.05);
+    }
     main {
-      max-width: 800px;
+      max-width: 900px;
       margin: 2rem auto;
       padding: 0 1rem;
+      display: grid;
+      gap: 1.5rem;
     }
-
+    section {
+      background: var(--glass-bg);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease;
+    }
+    section:hover { transform: translateY(-3px); }
     h2 {
-      color: #00ff99;
-      margin-bottom: 1rem;
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #fff;
     }
-
-    ul {
-      list-style: none;
-      padding: 0;
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
     }
-
-    .announcement {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-left: 5px solid #00ff99;
-      padding: 1rem;
-      margin-bottom: 1rem;
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: gray;
+    }
+    .dot.online { background: #22c55e; }
+    .dot.offline { background: #ef4444; }
+    button.action {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.1rem;
       border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,255,153,0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .announcement:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 15px rgba(0,255,153,0.4);
-    }
-
-    .title {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-
-    .meta {
+      cursor: pointer;
       font-size: 0.9rem;
-      color: #aaa;
-      margin-bottom: 0.5rem;
+      transition: all 0.25s ease;
+      margin-top: 0.5rem;
+      margin-right: 0.5rem;
     }
-
-    .message {
-      font-size: 1rem;
-      line-height: 1.4;
+    button.action:hover {
+      background: #a855f7;
+      box-shadow: 0 0 10px #a855f7;
+      transform: translateY(-2px);
     }
-
+    .meta {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    /* Accordion Announcements */
+    .announcement {
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .accordion-header {
+      cursor: pointer;
+      padding: 0.7rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+    }
+    .accordion-header:hover { color: #93c5fd; }
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      font-size: 0.95rem;
+      padding-left: 0.5rem;
+    }
+    .announcement.active .accordion-body {
+      max-height: 300px;
+      padding: 0.5rem;
+    }
     footer {
       text-align: center;
-      padding: 1rem;
-      background: #111;
-      border-top: 2px solid #00ff99;
-      font-size: 0.9rem;
-      color: #888;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
     }
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    .modal-content {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .modal-content h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .modal-content p { margin: 0.8rem 0; }
+    .close-btn {
+      margin-top: 0.5rem;
+      background: #ef4444;
+    }
+    .close-btn:hover { background: #dc2626; }
   </style>
 </head>
 <body>
+  <!-- Top header -->
   <header>
-    KingamerNep Server Announcements
+    <img class="flag" src="https://flagcdn.com/w20/np.png" alt="Nepal Flag">
+    <h1>Kingamer Server</h1>
   </header>
 
+  <!-- Button row -->
+  <div class="header-buttons">
+    <a href="https://aternos.org" target="_blank"><button>Aternos</button></a>
+    <button id="mcpackBtn">MCPack</button>
+    <a href="mailto:davidstha900@gmail.com?subject=Server%20Report"><button>Report</button></a>
+  </div>
+
+  <!-- Main content -->
   <main>
-    <h2>📢 Latest Announcements</h2>
-    <ul id="announcement-list">
-      <li>Loading announcements...</li>
-    </ul>
+    <section>
+      <h2>Server Info</h2>
+      <div class="status">
+        <div class="dot" id="statusDot"></div>
+        <div id="serverState">Checking server status...</div>
+      </div>
+      <p><strong>IP:</strong> Kingamer.aternos.me<br>
+         <strong>Port:</strong> 68586<br>
+         <strong>Players:</strong> <span id="playerCount">—</span></p>
+      <button class="action" id="refreshStatus">Refresh Status</button>
+      <div class="meta">Last updated: <span id="statusTime">—</span> (auto in <span id="statusTimer">60</span>s)</div>
+    </section>
+
+    <section>
+      <h2>Announcements</h2>
+      <div id="announcements"><p>Loading announcements...</p></div>
+      <button class="action" id="refreshAnnouncements">Refresh Announcements</button>
+      <div class="meta">Last updated: <span id="announceTime">—</span> (auto in <span id="announceTimer">60</span>s)</div>
+    </section>
   </main>
 
   <footer>
-    © 2025 KingamerNep | Stay tuned for more updates!
+    &copy; 2025 King Gamer Nep · Minecraft Community
   </footer>
 
-  <script>
-    async function loadAnnouncements() {
-      const list = document.getElementById("announcement-list");
-      list.innerHTML = "<li>Loading announcements...</li>";
-      try {
-        const response = await fetch("https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json");
-        if (!response.ok) throw new Error("Failed to fetch announcements");
-        const data = await response.json();
+  <!-- Modal -->
+  <div class="modal" id="mcpackModal">
+    <div class="modal-content">
+      <h3>MCPack</h3>
+      <p>Feature Coming Soon 🚀</p>
+      <button class="action close-btn" id="closeModal">Close</button>
+    </div>
+  </div>
 
-        list.innerHTML = "";
-        data.announcements.forEach(ann => {
-          const li = document.createElement("li");
-          li.className = "announcement";
-          li.innerHTML = `
-            <div class="title">${ann.title}</div>
-            <div class="meta">📅 ${ann.date} | 📍 ${ann.location}</div>
-            <div class="message">${ann.message}</div>
-          `;
-          list.appendChild(li);
-        });
-      } catch (err) {
-        console.error(err);
-        list.innerHTML = "<li style='color:#ff5555'>⚠️ Could not load announcements.</li>";
+  <script>
+    const STATUS_URL = "https://api.mcsrvstat.us/2/Kingamer.aternos.me:68586";
+    const ANNOUNCE_URL = "https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json";
+
+    const statusDot = document.getElementById("statusDot");
+    const serverState = document.getElementById("serverState");
+    const playerCount = document.getElementById("playerCount");
+    const statusTime = document.getElementById("statusTime");
+    const announceTime = document.getElementById("announceTime");
+    const announcementsEl = document.getElementById("announcements");
+    const statusTimerEl = document.getElementById("statusTimer");
+    const announceTimerEl = document.getElementById("announceTimer");
+
+    let statusCountdown = 60;
+    let announceCountdown = 60;
+
+    function formatTime(date = new Date()) {
+      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    async function loadStatus() {
+      try {
+        const res = await fetch(STATUS_URL, { cache: "no-store" });
+        const data = await res.json();
+        if (data.online) {
+          statusDot.className = "dot online";
+          serverState.textContent = "Online";
+          playerCount.textContent = data.players.online + "/" + data.players.max;
+        } else {
+          statusDot.className = "dot offline";
+          serverState.textContent = "Offline";
+          playerCount.textContent = "0";
+        }
+        statusTime.textContent = formatTime();
+        statusCountdown = 60;
+      } catch {
+        statusDot.className = "dot offline";
+        serverState.textContent = "Error checking status";
+        playerCount.textContent = "—";
+        statusTime.textContent = formatTime();
       }
     }
 
+    async function loadAnnouncements() {
+      try {
+        const res = await fetch(ANNOUNCE_URL, { cache: "no-store" });
+        const data = await res.json();
+        announcementsEl.innerHTML = "";
+        let list = Array.isArray(data) ? data : (data.announcements || []);
+        if (list.length === 0) {
+          announcementsEl.innerHTML = "<p>No announcements available.</p>";
+          return;
+        }
+        list.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "announcement";
+          div.innerHTML = `
+            <div class="accordion-header">${item.title || "Announcement"} <span>+</span></div>
+            <div class="accordion-body"><small>${item.date || ""}</small><p>${item.message || ""}</p></div>
+          `;
+          announcementsEl.appendChild(div);
+        });
+        // Accordion toggle
+        document.querySelectorAll(".accordion-header").forEach(header => {
+          header.addEventListener("click", () => {
+            const parent = header.parentElement;
+            parent.classList.toggle("active");
+          });
+        });
+        announceTime.textContent = formatTime();
+        announceCountdown = 60;
+      } catch {
+        announcementsEl.innerHTML = "<p style='color:red'>Failed to load announcements.</p>";
+        announceTime.textContent = formatTime();
+      }
+    }
+
+    // Countdown
+    setInterval(() => {
+      if (statusCountdown > 0) statusCountdown--;
+      if (announceCountdown > 0) announceCountdown--;
+      statusTimerEl.textContent = statusCountdown;
+      announceTimerEl.textContent = announceCountdown;
+    }, 1000);
+
+    document.getElementById("refreshStatus").addEventListener("click", loadStatus);
+    document.getElementById("refreshAnnouncements").addEventListener("click", loadAnnouncements);
+
+    // Initial load + auto-refresh
+    loadStatus();
     loadAnnouncements();
+    setInterval(loadStatus, 60000);
+    setInterval(loadAnnouncements, 60000);
+
+    // Modal logic
+    const mcpackBtn = document.getElementById("mcpackBtn");
+    const mcpackModal = document.getElementById("mcpackModal");
+    const closeModal = document.getElementById("closeModal");
+    mcpackBtn.addEventListener("click", () => mcpackModal.style.display = "flex");
+    closeModal.addEventListener("click", () => mcpackModal.style.display = "none");
+    mcpackModal.addEventListener("click", e => { if (e.target === mcpackModal) mcpackModal.style.display = "none"; });
   </script>
 </body>
 </html>
