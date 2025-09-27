@@ -414,4 +414,35 @@
     function closeModal(modal){ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); }
 
     // MCPack Modal
-    bt
+    btnMCPack.addEventListener('click', () => openModal(mcModal));
+    closeModalBtn.addEventListener('click', () => closeModal(mcModal));
+    mcModal.addEventListener('click', (e) => { if (e.target === mcModal) closeModal(mcModal); });
+
+    // Settings Modal
+    settingsBtn.addEventListener('click', () => openModal(settingsModal));
+    closeSettingsModalBtn.addEventListener('click', () => closeModal(settingsModal));
+    settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeModal(settingsModal); });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal(mcModal);
+            closeModal(settingsModal);
+        }
+    });
+
+    // ---------------- Theme Toggle ----------------
+    themeToggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark-mode');
+    });
+
+    // ---------------- wire events ----------------
+    copyIPBtn.addEventListener('click', copyIP);
+    joinBtn.addEventListener('click', openMinecraftUri);
+    openAternosBtn.addEventListener('click', openAternosPanel);
+    
+    // ---------------- start ----------------
+    updateServerStatus();
+
+  })();
+  </script>
+</body>
+</html>
