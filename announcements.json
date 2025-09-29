@@ -1,15 +1,29 @@
 {
   "announcements": [
     {
+      "id": 1,
       "title": "🛠 Server Maintenance",
-      "date": "Today",
+      "date": "2025-09-29",
       "location": "Whole Server",
       "message": "The server is currently all good so play with your friends. Thank you."
     },
     {
+      "id": 2,
       "title": "🏰 Castle Building Event",
-      "date": "Today",
+      "date": "2025-09-29",
       "message": "Join our special Castle Building Event! Build the best castle and win 2 magic spells and a set of enchanted armor. Show your creativity and compete with other players!"
+    },
+    {
+      "id": 3,
+      "title": "✨ Magical Server",
+      "date": "2025-09-29",
+      "message": "This is a magical server — explore enchanted biomes, discover rare spells, and team up with friends to unlock hidden quests and surprises."
+    },
+    {
+      "id": 4,
+      "title": "🛡 Custom Armour Release",
+      "date": "2025-09-29",
+      "message": "New custom armour is available! Equip exclusive sets with special properties. Visit the armory in-game to craft or obtain these unique armours."
     }
   ]
 }
