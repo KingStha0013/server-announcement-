@@ -6,17 +6,13 @@
       "location": "Whole Server",
       "message": "The server is currently all good so play with you friends.Thank you"
     },
-    {
-      "title": "📢 Event Reminder",
-      "date": "After Exams",
-      "location": "PvP Arena",
-      "message": "Reminder! The Magic Spell Event will start after exams. Make sure to join on time! The champion will receive ONE magical spell and will be announced on Discord."
-    },
-    {
-      "title": "✅ Ready for Event",
-      "date": "Tomorrow",
-      "location": "PvP Arena",
-      "message": "The PvP Arena is ready! Prepare your magic spells and gear up for the upcoming event. Let’s have fun and fair play!"
-    }
+    
+{
+  "title": "🏰 Castle Building Event",
+  "date": "Today",
+  "Event Date": "We provid very fast",
+  "message": "Join our special Castle Building Event! Build the best castle and win 2 magic spells and a set of enchanted armor. Show your creativity and compete with other players!",
+  
+}
   ]
 }
