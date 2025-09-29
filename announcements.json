@@ -4,13 +4,12 @@
       "title": "🛠 Server Maintenance",
       "date": "Today",
       "location": "Whole Server",
-      "message": "The server is currently all good so play with you friends.Thank you"
+      "message": "The server is currently all good so play with your friends. Thank you."
     },
-    
-{
-  "title": "🏰 Castle Building Event",
-  "date": "Today",
-  "message": "Join our special Castle Building Event! Build the best castle and win 2 magic spells and a set of enchanted armor. Show your creativity and compete with other players!",
-  
+    {
+      "title": "🏰 Castle Building Event",
+      "date": "Today",
+      "message": "Join our special Castle Building Event! Build the best castle and win 2 magic spells and a set of enchanted armor. Show your creativity and compete with other players!"
+    }
+  ]
 }
-]
