@@ -191,7 +191,7 @@
     <a class="btn" id="linkAternos" href="https://aternos.org" target="_blank" rel="noopener noreferrer">Aternos</a>
     <a class="btn" href="https://chunkbase.com/" target="_blank" rel="noopener noreferrer">Chunkbase</a>
     <button id="btnMCPack" class="btn secondary" title="MCPack (coming soon)">MCPack</button>
-    <button id="galleryBtn" class="btn secondary">Photos</button>
+    <button id="toggleGalleryBtn" class="btn secondary">Photos</button>
     <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
   </div>
 
@@ -334,7 +334,7 @@
     const copyIPBtn = document.getElementById('copyIP');
     const joinBtn = document.getElementById('joinMinecraft');
     const openAternosBtn = document.getElementById('openAternos');
-    const galleryBtn = document.getElementById('galleryBtn');
+    const toggleGalleryBtn = document.getElementById('toggleGalleryBtn');
     const photosSection = document.getElementById('photos-section');
     const photoGrid = document.querySelector('.photo-grid');
     const galleryModal = document.getElementById('galleryModal');
@@ -511,10 +511,26 @@
     }
     
     // Gallery button: Show and scroll to photos section
-    if (galleryBtn && photosSection) {
-      galleryBtn.addEventListener('click', () => {
+    if (toggleGalleryBtn && photosSection) {
+      // Check localStorage on page load
+      const showPhotos = localStorage.getItem('showPhotos') === 'true';
+      if (showPhotos) {
         photosSection.classList.remove('hidden');
-        photosSection.scrollIntoView({ behavior: 'smooth' });
+        toggleGalleryBtn.textContent = 'Hide Photos';
+      }
+
+      toggleGalleryBtn.addEventListener('click', () => {
+        const isHidden = photosSection.classList.contains('hidden');
+        if (isHidden) {
+          photosSection.classList.remove('hidden');
+          localStorage.setItem('showPhotos', 'true');
+          toggleGalleryBtn.textContent = 'Hide Photos';
+          photosSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          photosSection.classList.add('hidden');
+          localStorage.setItem('showPhotos', 'false');
+          toggleGalleryBtn.textContent = 'Photos';
+        }
       });
     }
 
