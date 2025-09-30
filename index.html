@@ -75,7 +75,7 @@
     .server-meta{font-weight:700;font-size:0.98rem}
     .server-sub{color:var(--muted);font-size:0.92rem;margin-top:4px}
     .players{font-family:var(--mono);font-weight:800;color:var(--accent);margin-top:10px;font-size:1.1rem}
-    .server-actions{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap: wrap;} /* Updated: Single row with flex-wrap */
+    .server-actions{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap: wrap;}
     .ghost{background:transparent;border:1px solid rgba(16,24,40,0.06);padding:8px 10px;border-radius:6px; font-size: 0.85rem;}
 
     /* announcements */
@@ -106,6 +106,24 @@
 
     /* footer */
     footer{text-align:center;color:var(--muted);padding:30px 0 40px;font-size:0.95rem}
+
+    .discord-btn {
+        background: #5865f2;
+        color: white;
+        font-weight: 700;
+        padding: 10px 12px;
+        border-radius: 6px;
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        transition: transform .2s ease;
+    }
+    .discord-btn:hover {
+        transform: translateY(-2px);
+    }
+    .discord-btn svg {
+        margin-right: 8px;
+    }
 
     @media (max-width:520px){
       .ann-controls{flex-direction:column;align-items:stretch;gap:8px}
@@ -143,7 +161,7 @@
               <div id="statusDot" class="status-dot" aria-hidden="true"></div>
               <div>
                 <div id="serverState" class="server-meta">Checking server status…</div>
-                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">40964</span></div>
+                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">68586</span></div>
               </div>
             </div>
 
@@ -208,6 +226,12 @@
           <p style="font-weight: 600; margin-bottom: 5px; color: var(--text);">Support Helpline:</p>
           <p style="margin-bottom: 5px;"><a href="tel:9764598332">9764598332</a></p>
           <p><a href="mailto:davidstha900@gmail.com">davidstha900@gmail.com</a></p>
+          <a href="https://discord.gg" target="_blank" class="discord-btn" style="margin-top:12px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M13.567 1.888C12.632 1.13 11.455.518 10.158.125A20.284 20.284 0 0 0 7.915 0a20.284 20.284 0 0 0-2.242.125C4.545.518 3.368 1.13 2.433 1.888A11.751 11.751 0 0 0 .546 5.678c.459-.444.975-.823 1.529-1.144a10.28 10.28 0 0 1 1.708-.946A15.751 15.751 0 0 0 7.915 3c2.039 0 4.026.49 5.864 1.488.554.321 1.07.7 1.529 1.144a11.75 11.75 0 0 0-1.887-3.79ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM7.915 12.25c-2.039 0-4.026-.49-5.864-1.488-.554-.321-1.07-.7-1.529-1.144a11.751 11.751 0 0 0 1.887 3.79c.958.749 2.135 1.361 3.432 1.754a20.284 20.284 0 0 0 2.242.125c2.039 0 4.026-.49 5.864-1.488.554-.321 1.07-.7 1.529-1.144a11.751 11.751 0 0 0-1.887-3.79c-.958-.749-2.135-1.361-3.432-1.754a20.284 20.284 0 0 0-2.242-.125Z"/>
+            </svg>
+            Join Discord VC
+          </a>
       </div>
       <div class="actions" style="margin-top:14px">
         <button id="closeSettingsModal" class="btn secondary">Close</button>
@@ -227,7 +251,7 @@
 
     // ---------------- config ----------------
     const MC_HOST = 'Kingamer.aternos.me';
-    const MC_PORT = '40964';
+    const MC_PORT = '68586';
     const ANN_URL = 'https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json';
     
     // ⭐ Manual Server Status Toggle ⭐
