@@ -51,8 +51,9 @@
     #settingsBtn:hover{background:rgba(16,24,40,0.04);color:var(--text)}
 
     /* action row */
-    .button-row{max-width:var(--maxwidth);margin:12px auto;padding:8px 12px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap: wrap;}
-    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:6px;border:none;font-weight:600;color:white;background:var(--accent);transition:transform .12s,box-shadow .12s;font-size: 0.9rem;}
+    .button-row{max-width:var(--maxwidth);margin:12px auto;padding:8px 12px;display:flex;gap:8px;align-items:center;overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;}
+    .button-row::-webkit-scrollbar{display: none;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:6px;border:none;font-weight:600;color:white;background:var(--accent);transition:transform .12s,box-shadow .12s;font-size: 0.9rem; flex-shrink: 0;}
     .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(11,94,215,0.12);font-weight:600}
     .btn.ghost{background:transparent;color:var(--text);border:1px solid rgba(16,24,40,0.06);font-weight:600;font-size: 0.85rem;}
     .btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(11,94,215,0.08)}
@@ -93,6 +94,29 @@
     .arrow{transition:transform .22s ease;display:inline-block;margin-left:6px}
     .ann-item.open .arrow{transform:rotate(90deg)}
 
+    /* server photos */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .photo-grid img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .photo-grid img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    /* Hide the photo section by default */
+    #photos-section.hidden {
+      display: none;
+    }
+
     /* modal */
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(16,24,40,0.45);z-index:100}
     .modal .modal-card{width:92%;max-width:420px;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 20px 60px rgba(2,6,23,0.18)}
@@ -100,13 +124,14 @@
     .modal p{color:var(--muted);margin:0}
     .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
     
-    /* toast */
+    /* Toast */
     .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,0.95);color:white;padding:10px 14px;border-radius:8px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,0.35);opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:200}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
 
-    /* footer */
+    /* Footer */
     footer{text-align:center;color:var(--muted);padding:30px 0 40px;font-size:0.95rem}
 
+    /* Discord button */
     .discord-btn {
         background: #5865f2;
         color: white;
@@ -125,9 +150,30 @@
         margin-right: 8px;
     }
 
+    /* Gallery modal */
+    #galleryModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      cursor: pointer;
+    }
+    #galleryImg {
+      max-width: 90%;
+      max-height: 90%;
+      display: block;
+      margin: auto;
+      border-radius: 8px;
+    }
+
     @media (max-width:520px){
       .ann-controls{flex-direction:column;align-items:stretch;gap:8px}
-      .button-row{flex-wrap:wrap;gap:8px}
     }
   </style>
 </head>
@@ -145,6 +191,7 @@
     <a class="btn" id="linkAternos" href="https://aternos.org" target="_blank" rel="noopener noreferrer">Aternos</a>
     <a class="btn" href="https://chunkbase.com/" target="_blank" rel="noopener noreferrer">Chunkbase</a>
     <button id="btnMCPack" class="btn secondary" title="MCPack (coming soon)">MCPack</button>
+    <button id="galleryBtn" class="btn secondary">Photos</button>
     <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
   </div>
 
@@ -201,6 +248,17 @@
           <h2 id="info-title">Info</h2>
           <p class="muted" style="margin-top:8px">Server info and announcements are updated on page load. Latest announcement is marked <strong>NEW</strong>. Today's announcements highlighted.</p>
         </div>
+        
+        <section class="card hidden" id="photos-section" aria-labelledby="photos-title" style="margin-top:16px">
+          <h2 id="photos-title">Server Photos</h2>
+          <p class="muted" style="margin-top:8px">A few snapshots of the server to show what it looks like!</p>
+          <div class="photo-grid">
+            <img src="https://i.imgur.com/uqinXKR.jpeg" alt="Server screenshot 1">
+            <img src="https://i.imgur.com/cBzTmzb.jpeg" alt="Server screenshot 2">
+            <img src="https://i.imgur.com/dc3545.jpeg" alt="Server screenshot 3">
+          </div>
+        </section>
+
       </aside>
     </div>
   </main>
@@ -226,7 +284,7 @@
           <p style="font-weight: 600; margin-bottom: 5px; color: var(--text);">Support Helpline:</p>
           <p style="margin-bottom: 5px;"><a href="tel:9764598332">9764598332</a></p>
           <p><a href="mailto:davidstha900@gmail.com">davidstha900@gmail.com</a></p>
-          <a href="https://discord.gg" target="_blank" class="discord-btn" style="margin-top:12px">
+          <a id="discordLink" href="discord://discord.com/channels/1370216217830494230/1370216218392264780" target="_blank" rel="noopener noreferrer" class="discord-btn" style="margin-top:12px">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
               <path d="M13.567 1.888C12.632 1.13 11.455.518 10.158.125A20.284 20.284 0 0 0 7.915 0a20.284 20.284 0 0 0-2.242.125C4.545.518 3.368 1.13 2.433 1.888A11.751 11.751 0 0 0 .546 5.678c.459-.444.975-.823 1.529-1.144a10.28 10.28 0 0 1 1.708-.946A15.751 15.751 0 0 0 7.915 3c2.039 0 4.026.49 5.864 1.488.554.321 1.07.7 1.529 1.144a11.75 11.75 0 0 0-1.887-3.79ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM7.915 12.25c-2.039 0-4.026-.49-5.864-1.488-.554-.321-1.07-.7-1.529-1.144a11.751 11.751 0 0 0 1.887 3.79c.958.749 2.135 1.361 3.432 1.754a20.284 20.284 0 0 0 2.242.125c2.039 0 4.026-.49 5.864-1.488.554-.321 1.07-.7 1.529-1.144a11.751 11.751 0 0 0-1.887-3.79c-.958-.749-2.135-1.361-3.432-1.754a20.284 20.284 0 0 0-2.242-.125Z"/>
             </svg>
@@ -237,6 +295,10 @@
         <button id="closeSettingsModal" class="btn secondary">Close</button>
       </div>
     </div>
+  </div>
+
+  <div id="galleryModal">
+    <img id="galleryImg" src="" alt="Full size photo">
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -272,6 +334,11 @@
     const copyIPBtn = document.getElementById('copyIP');
     const joinBtn = document.getElementById('joinMinecraft');
     const openAternosBtn = document.getElementById('openAternos');
+    const galleryBtn = document.getElementById('galleryBtn');
+    const photosSection = document.getElementById('photos-section');
+    const photoGrid = document.querySelector('.photo-grid');
+    const galleryModal = document.getElementById('galleryModal');
+    const galleryImg = document.getElementById('galleryImg');
 
     const btnMCPack = document.getElementById('btnMCPack');
     const mcModal = document.getElementById('mcModal');
@@ -324,12 +391,22 @@
         const res = await fetch(ANN_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error('Announcements fetch ' + res.status);
         const data = await res.json();
-
+        
         let list = [];
-        if (Array.isArray(data)) list = data;
-        else if (data.announcements && Array.isArray(data.announcements)) list = data.announcements;
-        else if (typeof data === 'object') list = Object.values(data);
+        if (Array.isArray(data)) {
+            list = data;
+        } else if (data && typeof data === 'object' && Array.isArray(data.announcements)) {
+            list = data.announcements;
+        } else if (data && typeof data === 'object') {
+            // Fallback for simple JSON objects
+            list = Object.values(data);
+        } else {
+            throw new Error('Invalid announcements data format.');
+        }
 
+        // Filter out non-objects to prevent sorting errors
+        list = list.filter(item => typeof item === 'object');
+        
         // sort newest-first securely
         list.sort((a,b) => {
           const ta = new Date(a.date || a._date || a.timestamp || 0).getTime();
@@ -341,7 +418,7 @@
         renderAnnouncements(list);
       } catch (err) {
         console.warn('fetchAnnouncements error', err);
-        annListEl.innerHTML = '<div class="muted" style="color:#d03">Failed to load announcements.</div>';
+        annListEl.innerHTML = '<div class="muted" style="color:#d03">Failed to load announcements. Please check the GitHub URL.</div>';
       }
     }
 
@@ -431,6 +508,32 @@
       const uri = `minecraft://?addExternalServer=Kingamer|${MC_HOST}:${MC_PORT}`;
       window.location.href = uri;
       setTimeout(()=> showToast('If Minecraft did not open, IP was copied'), 700);
+    }
+    
+    // Gallery button: Show and scroll to photos section
+    if (galleryBtn && photosSection) {
+      galleryBtn.addEventListener('click', () => {
+        photosSection.classList.remove('hidden');
+        photosSection.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    // Photo Gallery Modal Logic
+    if (photoGrid && galleryModal && galleryImg) {
+      photoGrid.addEventListener('click', (event) => {
+        if (event.target.tagName === 'IMG') {
+          galleryImg.src = event.target.src;
+          galleryModal.style.display = 'flex';
+        }
+      });
+      galleryModal.addEventListener('click', () => {
+        galleryModal.style.display = 'none';
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          galleryModal.style.display = 'none';
+        }
+      });
     }
 
     // ---------------- modals ----------------
