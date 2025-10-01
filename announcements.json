@@ -5,33 +5,28 @@
       "title": "🛠 Server Maintenance",
       "date": "2025-09-29",
       "location": "Whole Server",
-      "message": "The server is currently all good so play with your friends. Thank you."
+      "message": "The server is currently running smoothly with no issues. Thank you for your patience and happy playing!"
     },
     {
       "id": 2,
       "title": "PvP Event",
-      "date": "Today",
-      "message": "Join our special PvP fight with other players.Last survivor gets one armour or magical spell!And we will provide the event date soon.अन्य खेलाडीहरूसँग हाम्रो विशेष PvP लडाईमा सामेल हुनुहोस्। अन्तिम बाँचेकाले एउटा कवच वा जादुई मन्त्र पाउँछन्! र हामी चाँडै कार्यक्रमको मिति प्रदान गर्नेछौं। "
+      "date": "TBA",
+      "location": "Special PvP Arena",
+      "message": "Get ready for a special PvP event! The last player standing will win a piece of unique armor or a magical spell. The event date will be announced soon. हामी चाँडै नै कार्यक्रमको मिति घोषणा गर्नेछौं।"
     },
     {
       "id": 3,
       "title": "✨ Magical Server",
       "date": "2025-09-29",
-      "message": "This is a magical server — discover rare spells, and team up with friends to unlock hidden quests and surprises."
+      "location": "Global",
+      "message": "Welcome to the magical server! Discover rare spells, team up with friends to unlock hidden quests, and explore a world full of surprises."
     },
     {
       "id": 4,
-      "title": "New update of Server",
-      "date": "2025-10-01",
-      "message": "✨ Magical SMP — LClear 3.4.2 Update Drops Tomorrow! ✨
-@everyone get ready! Tomorrow the realm will be blessed with powerful new features:
-🗑 Trash Can Block – toss away unwanted items instantly.
-⚙️ Item Filter System – keep your inventory clean and organized.
-🌌 Infinite Night Vision – see the world in eternal clarity, day or night!
-🌀 Teleportation Magic – travel across the server faster than ever before.
-💠 New Magical Items – discover enchanted tools with unique powers.
-🎨 Fresh Models & Textures – magical blocks and items with brand-new looks.
-⚡ The update arrives tomorrow — prepare for a major magical upgrade!"
+      "title": "Server Update: LClear 3.4.2",
+      "date": "2025-10-02",
+      "location": "Global",
+      "message": "A major update is coming tomorrow! The new LClear 3.4.2 update includes: Trash Can Blocks, an Item Filter System, Infinite Night Vision, Teleportation Magic, new magical items, and updated models and textures. Get ready for a major magical upgrade!"
     }
   ]
 }
