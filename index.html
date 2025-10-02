@@ -113,7 +113,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     /* Hide the photo section by default */
-    #photos-section.hidden {
+    .hidden {
       display: none;
     }
 
@@ -192,6 +192,7 @@
     <a class="btn" href="https://chunkbase.com/" target="_blank" rel="noopener noreferrer">Chunkbase</a>
     <button id="btnMCPack" class="btn secondary" title="MCPack (coming soon)">MCPack</button>
     <button id="toggleGalleryBtn" class="btn secondary">Photos</button>
+    <button id="toggleCraftsBtn" class="btn secondary">Custom Crafts</button>
     <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
   </div>
 
@@ -208,7 +209,7 @@
               <div id="statusDot" class="status-dot" aria-hidden="true"></div>
               <div>
                 <div id="serverState" class="server-meta">Checking server status…</div>
-                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">40964</span></div>
+                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">68586</span></div>
               </div>
             </div>
 
@@ -256,8 +257,20 @@
             <img src="https://i.imgur.com/uqinXKR.jpeg" alt="Server screenshot 1">
             <img src="https://i.imgur.com/cBzTmzb.jpeg" alt="Server screenshot 2">
             <img src="https://i.imgur.com/faLRrdg.jpeg" alt="Server screenshot 3">
-            <img src="https://i.imgur.com/U9hz3uH.jpeg" alt="Server screenshot 4">
-            <img src="https://i.imgur.com/f4OP240.jpeg" alt="Server screenshot 5">
+          </div>
+        </section>
+
+        <section class="card hidden" id="crafts-section" aria-labelledby="crafts-title" style="margin-top:16px">
+          <h2 id="crafts-title">Custom Crafts</h2>
+          <p class="muted" style="margin-top:8px">Here are some of our best custom crafts!</p>
+          <div class="photo-grid" id="crafts-grid">
+            <img src="https://i.imgur.com/ruL4lE7.png" alt="Custom craft 1">
+            <img src="https://i.imgur.com/kshk9KC.png" alt="Custom craft 2">
+            <img src="https://i.imgur.com/u8hVDET.png" alt="Custom craft 3">
+            <img src="https://i.imgur.com/8aE1k6X.png" alt="Custom craft 4">
+            <img src="https://i.imgur.com/MCi2Gds.png" alt="Custom craft 5">
+            <img src="https://i.imgur.com/XGriqfV.png" alt="Custom craft 6">
+             <img src="https://i.imgur.com/XMlYWfE.png" alt="Custom craft 6">
           </div>
         </section>
 
@@ -315,7 +328,7 @@
 
     // ---------------- config ----------------
     const MC_HOST = 'Kingamer.aternos.me';
-    const MC_PORT = '40964';
+    const MC_PORT = '68586';
     const ANN_URL = 'https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json';
     
     // ⭐ Manual Server Status Toggle ⭐
@@ -336,9 +349,14 @@
     const copyIPBtn = document.getElementById('copyIP');
     const joinBtn = document.getElementById('joinMinecraft');
     const openAternosBtn = document.getElementById('openAternos');
+
     const toggleGalleryBtn = document.getElementById('toggleGalleryBtn');
+    const toggleCraftsBtn = document.getElementById('toggleCraftsBtn');
     const photosSection = document.getElementById('photos-section');
-    const photoGrid = document.querySelector('.photo-grid');
+    const craftsSection = document.getElementById('crafts-section');
+    const photoGrid = document.querySelector('#photos-section .photo-grid');
+    const craftsGrid = document.getElementById('crafts-grid');
+    
     const galleryModal = document.getElementById('galleryModal');
     const galleryImg = document.getElementById('galleryImg');
 
@@ -525,13 +543,42 @@
         const isHidden = photosSection.classList.contains('hidden');
         if (isHidden) {
           photosSection.classList.remove('hidden');
+          craftsSection.classList.add('hidden'); // Hide other sections
           localStorage.setItem('showPhotos', 'true');
+          localStorage.setItem('showCrafts', 'false');
           toggleGalleryBtn.textContent = 'Hide Photos';
+          toggleCraftsBtn.textContent = 'Custom Crafts';
           photosSection.scrollIntoView({ behavior: 'smooth' });
         } else {
           photosSection.classList.add('hidden');
           localStorage.setItem('showPhotos', 'false');
           toggleGalleryBtn.textContent = 'Photos';
+        }
+      });
+    }
+
+    // Custom Crafts button
+    if (toggleCraftsBtn && craftsSection) {
+      const showCrafts = localStorage.getItem('showCrafts') === 'true';
+      if (showCrafts) {
+        craftsSection.classList.remove('hidden');
+        toggleCraftsBtn.textContent = 'Hide Crafts';
+      }
+
+      toggleCraftsBtn.addEventListener('click', () => {
+        const isHidden = craftsSection.classList.contains('hidden');
+        if (isHidden) {
+          craftsSection.classList.remove('hidden');
+          photosSection.classList.add('hidden'); // Hide other sections
+          localStorage.setItem('showCrafts', 'true');
+          localStorage.setItem('showPhotos', 'false');
+          toggleCraftsBtn.textContent = 'Hide Crafts';
+          toggleGalleryBtn.textContent = 'Photos';
+          craftsSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          craftsSection.classList.add('hidden');
+          localStorage.setItem('showCrafts', 'false');
+          toggleCraftsBtn.textContent = 'Custom Crafts';
         }
       });
     }
@@ -544,6 +591,18 @@
           galleryModal.style.display = 'flex';
         }
       });
+    }
+    if (craftsGrid && galleryModal && galleryImg) {
+      craftsGrid.addEventListener('click', (event) => {
+        if (event.target.tagName === 'IMG') {
+          galleryImg.src = event.target.src;
+          galleryModal.style.display = 'flex';
+        }
+      });
+    }
+
+    // Global modal close listeners
+    if (galleryModal) {
       galleryModal.addEventListener('click', () => {
         galleryModal.style.display = 'none';
       });
@@ -553,7 +612,7 @@
         }
       });
     }
-
+    
     // ---------------- modals ----------------
     function openModal(modal){ modal.style.display = 'flex'; modal.setAttribute('aria-hidden','false'); }
     function closeModal(modal){ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); }
