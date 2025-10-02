@@ -190,7 +190,7 @@
   <div class="button-row" role="navigation" aria-label="Primary actions">
     <a class="btn" id="linkAternos" href="https://aternos.org" target="_blank" rel="noopener noreferrer">Aternos</a>
     <a class="btn" href="https://chunkbase.com/" target="_blank" rel="noopener noreferrer">Chunkbase</a>
-    <button id="btnMCPack" class="btn secondary" title="MCPack (coming soon)">MCPack</button>
+    <a href="https://drive.google.com/file/d/1UOUAnXlKfz2xjFVY8Hc5f0gvQRXCQlvm/view?usp=drivesdk" class="btn secondary" target="_blank" rel="noopener noreferrer">MCPack</a>
     <button id="toggleGalleryBtn" class="btn secondary">Photos</button>
     <button id="toggleCraftsBtn" class="btn secondary">Custom Crafts</button>
     <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
@@ -252,7 +252,7 @@
         
         <section class="card hidden" id="photos-section" aria-labelledby="photos-title" style="margin-top:16px">
           <h2 id="photos-title">Server Photos</h2>
-          <p class="muted" style="margin-top:8px">A few snapshots of the server to show what it looks like!</p>
+          <p class="muted" style="margin-top:8px">A few snapshots of the server to show what it looks like! (Click to enlarge)</p>
           <div class="photo-grid">
             <img src="https://i.imgur.com/uqinXKR.jpeg" alt="Server screenshot 1">
             <img src="https://i.imgur.com/cBzTmzb.jpeg" alt="Server screenshot 2">
@@ -262,7 +262,7 @@
 
         <section class="card hidden" id="crafts-section" aria-labelledby="crafts-title" style="margin-top:16px">
           <h2 id="crafts-title">Custom Crafts</h2>
-          <p class="muted" style="margin-top:8px">Here are some of our best custom crafts!</p>
+          <p class="muted" style="margin-top:8px">Here are some of our best custom crafts! (Click to enlarge)</p>
           <div class="photo-grid" id="crafts-grid">
             <img src="https://i.imgur.com/kshk9KC.png".png" alt="Wizards Armour">
             <img src="https://i.imgur.com/u8hVDET.png" alt="Heaven Armour">
@@ -291,16 +291,6 @@
       </aside>
     </div>
   </main>
-
-  <div id="mcModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-card card" style="max-width:420px">
-      <h3>MCPack</h3>
-      <p class="muted" style="margin-top:8px">This feature will be available soon. A download link will appear here when the MCPack is ready.</p>
-      <div class="actions" style="margin-top:14px">
-        <button id="closeModal" class="btn secondary">Close</button>
-      </div>
-    </div>
-  </div>
 
   <div id="settingsModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal-card card" style="max-width:420px">
@@ -373,10 +363,6 @@
     
     const galleryModal = document.getElementById('galleryModal');
     const galleryImg = document.getElementById('galleryImg');
-
-    const btnMCPack = document.getElementById('btnMCPack');
-    const mcModal = document.getElementById('mcModal');
-    const closeModalBtn = document.getElementById('closeModal');
     
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsModal = document.getElementById('settingsModal');
@@ -631,18 +617,12 @@
     function openModal(modal){ modal.style.display = 'flex'; modal.setAttribute('aria-hidden','false'); }
     function closeModal(modal){ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); }
 
-    // MCPack Modal
-    btnMCPack.addEventListener('click', () => openModal(mcModal));
-    closeModalBtn.addEventListener('click', () => closeModal(mcModal));
-    mcModal.addEventListener('click', (e) => { if (e.target === mcModal) closeModal(mcModal); });
-
     // Settings Modal
     settingsBtn.addEventListener('click', () => openModal(settingsModal));
     closeSettingsModalBtn.addEventListener('click', () => closeModal(settingsModal));
     settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeModal(settingsModal); });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeModal(mcModal);
             closeModal(settingsModal);
         }
     });
@@ -664,4 +644,3 @@
   </script>
 </body>
 </html>
-
