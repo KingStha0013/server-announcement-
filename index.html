@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kingamer Server — v.9</title>
+  <title>Kingamer Server — v.10 (AFK Bot Ready)</title>
 
   <style>
     :root{
@@ -229,7 +229,7 @@
               <div id="statusDot" class="status-dot" aria-hidden="true"></div>
               <div>
                 <div id="serverState" class="server-meta">Checking server status…</div>
-                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">68586</span></div>
+                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">40964</span></div>
               </div>
             </div>
 
@@ -239,7 +239,12 @@
 
           <div id="onlineContent" style="display: none;">
             <div class="players" id="playerCount">—</div>
-            <div id="serverMOTD" class="server-sub" style="margin-top:8px"></div>
+            <div id="serverMOTD" class="server-sub" style="margin-top:8px">Welcome to the Kingamer server! Have fun.</div>
+            
+            <div id="playerListContainer" style="margin-top:12px; display: none;">
+              <div style="font-weight: 600; margin-bottom: 6px;">Online Players:</div>
+              <div id="playerList" class="muted" style="font-size: 0.9rem;"></div>
+            </div>
 
             <div class="server-actions" role="group" aria-label="Server actions">
               <button id="copyIP" class="btn ghost" title="Copy IP">Copy IP</button>
@@ -267,7 +272,7 @@
       <aside>
         <div class="card" aria-labelledby="info-title">
           <h2 id="info-title">Info</h2>
-          <p class="muted" style="margin-top:8px">Server info and announcements are updated on page load. Latest announcement is marked <strong>NEW</strong>. Today's announcements highlighted.</p>
+          <p class="muted" style="margin-top:8px">The server is maintained by an AFK bot, keeping it **online 24/7** for easy access. Latest announcement is marked **NEW**. Today's announcements highlighted.</p>
         </div>
         
         <section class="card hidden" id="photos-section" aria-labelledby="photos-title" style="margin-top:16px">
@@ -495,11 +500,13 @@
 
     // ---------------- config ----------------
     const MC_HOST = 'Kingamer.aternos.me';
-    const MC_PORT = '68586';
+    // ⭐ UPDATED PORT FOR YOUR SERVER
+    const MC_PORT = '40964'; 
     const ANN_URL = 'https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json';
     
-    // ⭐ Manual Server Status Toggle ⭐
-    const isServerOnline = true; 
+    // NOTE: The external API check is commented out/ignored below, as you requested 
+    // to hardcode the "always online" status.
+    // const MC_API_URL = `https://api.mcstatus.io/v2/status/bedrock/${MC_HOST}:${MC_PORT}`; 
 
     // ---------------- DOM refs ----------------
     const statusDot = document.getElementById('statusDot');
@@ -509,6 +516,8 @@
 
     const playerCountEl = document.getElementById('playerCount');
     const serverMOTDEl = document.getElementById('serverMOTD');
+    // Player list container is kept hidden/ignored as player count is hardcoded
+    const playerListContainerEl = document.getElementById('playerListContainer');
 
     const annListEl = document.getElementById('annList');
     const annSearchEl = document.getElementById('annSearch');
@@ -519,15 +528,15 @@
 
     const toggleGalleryBtn = document.getElementById('toggleGalleryBtn');
     const toggleCraftsBtn = document.getElementById('toggleCraftsBtn');
-    const toggleWeaponsBtn = document.getElementById('toggleWeaponsBtn'); // NEW Ref
+    const toggleWeaponsBtn = document.getElementById('toggleWeaponsBtn'); 
     const photosSection = document.getElementById('photos-section');
     const craftsSection = document.getElementById('crafts-section');
-    const weaponsSection = document.getElementById('weapons-section'); // NEW Ref
+    const weaponsSection = document.getElementById('weapons-section'); 
     const photoGrid = document.querySelector('#photos-section .photo-grid');
     const craftsGrid = document.getElementById('crafts-grid');
-    const weaponsGrid = document.getElementById('weapons-grid'); // NEW Ref
+    const weaponsGrid = document.getElementById('weapons-grid'); 
     const armourSearchEl = document.getElementById('armourSearch'); 
-    const weaponSearchEl = document.getElementById('weaponSearch'); // NEW Ref
+    const weaponSearchEl = document.getElementById('weaponSearch'); 
     
     const galleryModal = document.getElementById('galleryModal');
     const galleryImg = document.getElementById('galleryImg');
@@ -551,25 +560,35 @@
     function setStatusDot(online){ if (!statusDot) return; online ? statusDot.classList.add('online') : statusDot.classList.remove('online'); }
     function showToast(text, ms=1400){ if(!toastEl) return; toastEl.textContent = text; toastEl.classList.add('show'); setTimeout(()=> toastEl.classList.remove('show'), ms); }
     
-    // ---------------- main logic ----------------
-    function updateServerStatus() {
-        if (isServerOnline) {
-            setStatusDot(true);
-            serverStateEl.textContent = 'Online';
-            onlineContentEl.style.display = 'block';
-            announcementsSectionEl.style.display = 'block';
-            
-            // Dummy data for online status
-            playerCountEl.textContent = '0 / 10';
-            serverMOTDEl.textContent = 'Welcome to the Kingamer server! Have fun.';
+    // MOTD formatting is now mostly ignored as it's hardcoded in HTML
+    function formatMotd(motd){
+      if (!motd) return '';
+      let html = escapeHtml(motd);
+      html = html.replace(/§l/g, '<strong>').replace(/§r/g, '</strong>').replace(/§[0-9a-fk-o]/g, '');
+      html = html.replace(/\r?\n/g, '<br>');
+      return html;
+    }
 
-            fetchAnnouncements();
-        } else {
-            setStatusDot(false);
-            serverStateEl.textContent = 'Server is Offline';
-            onlineContentEl.style.display = 'none';
-            announcementsSectionEl.style.display = 'none';
-        }
+    // ---------------- main logic ----------------
+    async function updateServerStatus() {
+        // ⭐ CORE CHANGE: Hardcode the status to be always online with 1/10 players
+        
+        setStatusDot(true);
+        serverStateEl.textContent = 'Online';
+        onlineContentEl.style.display = 'block';
+        announcementsSectionEl.style.display = 'block';
+        
+        // Hardcoded Player Count (1 AFK bot / 10 max slots)
+        playerCountEl.textContent = `1 / 10`; 
+        
+        // Hide the player list section since we don't have real data
+        playerListContainerEl.style.display = 'none';
+
+        // Update the port display
+        document.getElementById('serverPort').textContent = MC_PORT;
+        
+        // Always try to fetch announcements
+        fetchAnnouncements();
     }
 
     // ---------------- announcements ----------------
@@ -586,13 +605,11 @@
         } else if (data && typeof data === 'object' && Array.isArray(data.announcements)) {
             list = data.announcements;
         } else if (data && typeof data === 'object') {
-            // Fallback for simple JSON objects
             list = Object.values(data);
         } else {
             throw new Error('Invalid announcements data format.');
         }
 
-        // Filter out non-objects to prevent sorting errors
         list = list.filter(item => typeof item === 'object');
         
         // sort newest-first securely
@@ -696,7 +713,7 @@
         });
     }
     
-    // ---------------- Custom Weapon Search (NEW) ----------------
+    // ---------------- Custom Weapon Search ----------------
     if (weaponSearchEl && weaponsGrid) {
         weaponSearchEl.addEventListener('input', () => {
             const query = String(weaponSearchEl.value || '').trim().toLowerCase();
@@ -799,7 +816,7 @@
         });
     }
     
-    // Custom Weapons (NEW)
+    // Custom Weapons
     if (toggleWeaponsBtn && weaponsSection) {
         const showWeapons = localStorage.getItem('showWeapons') === 'true';
         if (showWeapons) weaponsSection.classList.remove('hidden');
@@ -833,7 +850,7 @@
         }
       });
     }
-    // Custom Weapons Modal Logic (NEW)
+    // Custom Weapons Modal Logic
     if (weaponsGrid && galleryModal && galleryImg) {
       weaponsGrid.addEventListener('click', (event) => {
         const item = event.target.closest('.photo-item');
