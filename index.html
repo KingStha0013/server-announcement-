@@ -755,8 +755,11 @@
                     document.getElementById(`toggle${sectionToShow.id.split('-')[0]}Btn`).textContent = `Hide ${buttonTextToShow}`;
                     localStorage.setItem(storageKey, 'true');
                     
-                    // ⭐ SCROLL FIX APPLIED HERE: Scroll to the section after showing it.
-                    sec.scrollIntoView({ behavior: 'smooth' });
+                    // ⭐ SCROLL FIX V2: Use setTimeout to ensure the element is visible 
+                    // before telling the browser to scroll to it.
+                    setTimeout(() => {
+                        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 10);
                     
                 } else {
                     sec.classList.add('hidden');
