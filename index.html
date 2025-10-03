@@ -500,13 +500,8 @@
 
     // ---------------- config ----------------
     const MC_HOST = 'Kingamer.aternos.me';
-    // ⭐ UPDATED PORT FOR YOUR SERVER
     const MC_PORT = '40964'; 
     const ANN_URL = 'https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json';
-    
-    // NOTE: The external API check is commented out/ignored below, as you requested 
-    // to hardcode the "always online" status.
-    // const MC_API_URL = `https://api.mcstatus.io/v2/status/bedrock/${MC_HOST}:${MC_PORT}`; 
 
     // ---------------- DOM refs ----------------
     const statusDot = document.getElementById('statusDot');
@@ -516,7 +511,6 @@
 
     const playerCountEl = document.getElementById('playerCount');
     const serverMOTDEl = document.getElementById('serverMOTD');
-    // Player list container is kept hidden/ignored as player count is hardcoded
     const playerListContainerEl = document.getElementById('playerListContainer');
 
     const annListEl = document.getElementById('annList');
@@ -560,7 +554,6 @@
     function setStatusDot(online){ if (!statusDot) return; online ? statusDot.classList.add('online') : statusDot.classList.remove('online'); }
     function showToast(text, ms=1400){ if(!toastEl) return; toastEl.textContent = text; toastEl.classList.add('show'); setTimeout(()=> toastEl.classList.remove('show'), ms); }
     
-    // MOTD formatting is now mostly ignored as it's hardcoded in HTML
     function formatMotd(motd){
       if (!motd) return '';
       let html = escapeHtml(motd);
@@ -571,7 +564,7 @@
 
     // ---------------- main logic ----------------
     async function updateServerStatus() {
-        // ⭐ CORE CHANGE: Hardcode the status to be always online with 1/10 players
+        // Hardcode the status to be always online with 1/10 players
         
         setStatusDot(true);
         serverStateEl.textContent = 'Online';
@@ -761,6 +754,10 @@
                     // Update button text for the section being shown
                     document.getElementById(`toggle${sectionToShow.id.split('-')[0]}Btn`).textContent = `Hide ${buttonTextToShow}`;
                     localStorage.setItem(storageKey, 'true');
+                    
+                    // ⭐ SCROLL FIX APPLIED HERE: Scroll to the section after showing it.
+                    sec.scrollIntoView({ behavior: 'smooth' });
+                    
                 } else {
                     sec.classList.add('hidden');
                     // Update button text for the section being hidden
@@ -786,10 +783,6 @@
                 }
             }
         });
-        
-        if (isHidden) {
-            sectionToShow.scrollIntoView({ behavior: 'smooth' });
-        }
     }
 
 
