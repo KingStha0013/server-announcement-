@@ -79,9 +79,9 @@
     .server-actions{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap: wrap;}
     .ghost{background:transparent;border:1px solid rgba(16,24,40,0.06);padding:8px 10px;border-radius:6px; font-size: 0.85rem;}
 
-    /* announcements */
+    /* announcements and search input styling */
     .ann-controls{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-    .search-input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(16,24,40,0.06)}
+    .search-input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(16,24,40,0.06); margin-bottom: 10px;}
     .ann-list{display:flex;flex-direction:column;gap:10px;max-height:520px;overflow:auto;padding-right:6px}
     .ann-item{border:1px solid rgba(16,24,40,0.04);border-radius:8px;overflow:hidden;background:var(--card)}
     .ann-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#f8fafc;cursor:pointer}
@@ -94,25 +94,45 @@
     .arrow{transition:transform .22s ease;display:inline-block;margin-left:6px}
     .ann-item.open .arrow{transform:rotate(90deg)}
 
-    /* server photos */
+    /* server photos / custom armour / custom weapon grid */
     .photo-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 8px;
+      gap: 12px; 
       margin-top: 8px;
+    }
+    .photo-item {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
     }
     .photo-grid img {
       width: 100%;
       height: auto;
       border-radius: 6px;
-      cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      min-height: 80px; 
+      object-fit: contain;
     }
-    .photo-grid img:hover {
+    .photo-item:hover img {
       transform: scale(1.02);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    /* Hide the photo section by default */
+    .photo-caption {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    /* Hide the sections by default */
     .hidden {
       display: none;
     }
@@ -192,8 +212,8 @@
     <a class="btn" href="https://chunkbase.com/" target="_blank" rel="noopener noreferrer">Chunkbase</a>
     <a href="https://www.mediafire.com/file/qqmxqhnwffcvc2b/FPS_Optimizer_v1.1.mcpack/file" class="btn secondary" target="_blank" rel="noopener noreferrer">MCPack</a>
     <button id="toggleGalleryBtn" class="btn secondary">Photos</button>
-    <button id="toggleCraftsBtn" class="btn secondary">Custom Crafts</button>
-    <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
+    <button id="toggleCraftsBtn" class="btn secondary">Custom Armour</button>
+    <button id="toggleWeaponsBtn" class="btn secondary">Custom Weapon</button> <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
   </div>
 
   <main class="container" role="main">
@@ -261,34 +281,177 @@
         </section>
 
         <section class="card hidden" id="crafts-section" aria-labelledby="crafts-title" style="margin-top:16px">
-          <h2 id="crafts-title">Custom Crafts</h2>
-          <p class="muted" style="margin-top:8px">Here are some of our best custom crafts! (Click to enlarge)</p>
+          <h2 id="crafts-title">Custom Armour</h2>
+          <p class="muted" style="margin-top:8px">Here are all the custom armour sets and weapons available on the server. (Click to enlarge)</p>
+          
+          <input id="armourSearch" class="search-input" type="search" placeholder="Search armour by name..." aria-label="Search custom armour">
+
           <div class="photo-grid" id="crafts-grid">
-            <img src="https://i.imgur.com/kshk9KC.png".png" alt="Wizards Armour">
-            <img src="https://i.imgur.com/u8hVDET.png" alt="Heaven Armour">
-            <img src="https://i.imgur.com/XMlYWfE.png" alt="Winter Armour">
-            <img src="https://i.imgur.com/XGriqfV.png" alt="Toxic Armour">
-            <img src="https://i.imgur.com/MCi2Gds.png" alt="Nether Armour">
-            <img src="https://i.imgur.com/dCaapQY.png" alt="Overpower Armour">
-            <img src="https://i.imgur.com/i3qPAvl.png" alt="Assassin's Armour">
-            <img src="https://i.imgur.com/7INCZGd.png" alt="Miner Armour">
-            <img src="https://i.imgur.com/GaSzlhr.png" alt="Thunder God Armour">
-            <img src="https://i.imgur.com/rdPP838.png" alt="End Armour">
-            <img src="https://i.imgur.com/ruL4lE7.png" alt="Night Spear">
-            <img src="https://i.imgur.com/8aE1k6X.png" alt="Double Sword">
-            <img src="https://i.imgur.com/bsbCU3l.png" alt="Sun Axe">
-            <img src="https://i.imgur.com/a7tfI83.png" alt="Fire Sword">
-            <img src="https://i.imgur.com/zDA5kHa.png" alt="Fire Staff">
-            <img src="" alt="Custom craft 16">
-            <img src="" alt="Custom craft 17">
-            <img src="" alt="Custom craft 18">
-            <img src="" alt="Custom craft 19">
-            <img src="" alt="Custom craft 20">
-            <img src="" alt="Custom craft 21">
+            
+            <div class="photo-item" data-name="Wizards Armour">
+              <img src="https://i.imgur.com/kshk9KC.png" alt="Wizards Armour">
+              <div class="photo-caption">Wizards Armour</div>
+            </div>
+            
+            <div class="photo-item" data-name="Heaven Armour">
+              <img src="https://i.imgur.com/u8hVDET.png" alt="Heaven Armour">
+              <div class="photo-caption">Heaven Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Winter Armour">
+              <img src="https://i.imgur.com/XMlYWfE.png" alt="Winter Armour">
+              <div class="photo-caption">Winter Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Toxic Armour">
+              <img src="https://i.imgur.com/XGriqfV.png" alt="Toxic Armour">
+              <div class="photo-caption">Toxic Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Nether Armour">
+              <img src="https://i.imgur.com/MCi2Gds.png" alt="Nether Armour">
+              <div class="photo-caption">Nether Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Overpower Armour">
+              <img src="https://i.imgur.com/dCaapQY.png" alt="Overpower Armour">
+              <div class="photo-caption">Overpower Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Assassin's Armour">
+              <img src="https://i.imgur.com/i3qPAvl.png" alt="Assassin's Armour">
+              <div class="photo-caption">Assassin's Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Miner Armour">
+              <img src="https://i.imgur.com/7INCZGd.png" alt="Miner Armour">
+              <div class="photo-caption">Miner Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Thunder God Armour">
+              <img src="https://i.imgur.com/GaSzlhr.png" alt="Thunder God Armour">
+              <div class="photo-caption">Thunder God Armour</div>
+            </div>
+            
+            <div class="photo-item" data-name="End Armour">
+              <img src="https://i.imgur.com/rdPP838.png" alt="End Armour">
+              <div class="photo-caption">End Armour</div>
+            </div>
+
+            <div class="photo-item" data-name="Night Spear">
+              <img src="https://i.imgur.com/ruL4lE7.png" alt="Night Spear">
+              <div class="photo-caption">Night Spear</div>
+            </div>
+
+            <div class="photo-item" data-name="Double Sword">
+              <img src="https://i.imgur.com/8aE1k6X.png" alt="Double Sword">
+              <div class="photo-caption">Double Sword</div>
+            </div>
+
+            <div class="photo-item" data-name="Sun Axe">
+              <img src="https://i.imgur.com/bsbCU3l.png" alt="Sun Axe">
+              <div class="photo-caption">Sun Axe</div>
+            </div>
+
+            <div class="photo-item" data-name="Fire Sword">
+              <img src="https://i.imgur.com/a7tfI83.png" alt="Fire Sword">
+              <div class="photo-caption">Fire Sword</div>
+            </div>
+
+            <div class="photo-item" data-name="Fire Staff">
+              <img src="https://i.imgur.com/zDA5kHa.png" alt="Fire Staff">
+              <div class="photo-caption">Fire Staff</div>
+            </div>
+
+            <div class="photo-item" data-name="Custom craft 16">
+              <img src="" alt="Custom craft 16">
+              <div class="photo-caption">Custom craft 16</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 17">
+              <img src="" alt="Custom craft 17">
+              <div class="photo-caption">Custom craft 17</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 18">
+              <img src="" alt="Custom craft 18">
+              <div class="photo-caption">Custom craft 18</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 19">
+              <img src="" alt="Custom craft 19">
+              <div class="photo-caption">Custom craft 19</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 20">
+              <img src="" alt="Custom craft 20">
+              <div class="photo-caption">Custom craft 20</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 21">
+              <img src="" alt="Custom craft 21">
+              <div class="photo-caption">Custom craft 21</div>
+            </div>
+            
           </div>
         </section>
+        
+        <section class="card hidden" id="weapons-section" aria-labelledby="weapons-title" style="margin-top:16px">
+          <h2 id="weapons-title">Custom Weapon</h2>
+          <p class="muted" style="margin-top:8px">Here are the custom weapons available on the server. (Click to enlarge)</p>
+          
+          <input id="weaponSearch" class="search-input" type="search" placeholder="Search weapon by name..." aria-label="Search custom weapon">
 
-      </aside>
+          <div class="photo-grid" id="weapons-grid">
+            
+                        <div class="photo-item" data-name="Night Spear">
+              <img src="https://i.imgur.com/ruL4lE7.png" alt="Night Spear">
+              <div class="photo-caption">Night Spear</div>
+            </div>
+
+            <div class="photo-item" data-name="Double Sword">
+              <img src="https://i.imgur.com/8aE1k6X.png" alt="Double Sword">
+              <div class="photo-caption">Double Sword</div>
+            </div>
+
+            <div class="photo-item" data-name="Sun Axe">
+              <img src="https://i.imgur.com/bsbCU3l.png" alt="Sun Axe">
+              <div class="photo-caption">Sun Axe</div>
+            </div>
+
+            <div class="photo-item" data-name="Fire Sword">
+              <img src="https://i.imgur.com/a7tfI83.png" alt="Fire Sword">
+              <div class="photo-caption">Fire Sword</div>
+            </div>
+
+            <div class="photo-item" data-name="Fire Staff">
+              <img src="https://i.imgur.com/zDA5kHa.png" alt="Fire Staff">
+              <div class="photo-caption">Fire Staff</div>
+            </div>
+
+            <div class="photo-item" data-name="Custom craft 16">
+              <img src="" alt="Custom craft 16">
+              <div class="photo-caption">Custom craft 16</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 17">
+              <img src="" alt="Custom craft 17">
+              <div class="photo-caption">Custom craft 17</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 18">
+              <img src="" alt="Custom craft 18">
+              <div class="photo-caption">Custom craft 18</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 19">
+              <img src="" alt="Custom craft 19">
+              <div class="photo-caption">Custom craft 19</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 20">
+              <img src="" alt="Custom craft 20">
+              <div class="photo-caption">Custom craft 20</div>
+            </div>
+            <div class="photo-item" data-name="Custom craft 21">
+              <img src="" alt="Custom craft 21">
+              <div class="photo-caption">Custom craft 21</div>
+            </div>
+
+            </div>
+        </section>
+        </aside>
     </div>
   </main>
 
@@ -336,7 +499,7 @@
     const ANN_URL = 'https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json';
     
     // ⭐ Manual Server Status Toggle ⭐
-    const isServerOnline = true; // CHANGE THIS TO `false` TO SIMULATE OFFLINE STATUS
+    const isServerOnline = true; 
 
     // ---------------- DOM refs ----------------
     const statusDot = document.getElementById('statusDot');
@@ -356,10 +519,15 @@
 
     const toggleGalleryBtn = document.getElementById('toggleGalleryBtn');
     const toggleCraftsBtn = document.getElementById('toggleCraftsBtn');
+    const toggleWeaponsBtn = document.getElementById('toggleWeaponsBtn'); // NEW Ref
     const photosSection = document.getElementById('photos-section');
     const craftsSection = document.getElementById('crafts-section');
+    const weaponsSection = document.getElementById('weapons-section'); // NEW Ref
     const photoGrid = document.querySelector('#photos-section .photo-grid');
     const craftsGrid = document.getElementById('crafts-grid');
+    const weaponsGrid = document.getElementById('weapons-grid'); // NEW Ref
+    const armourSearchEl = document.getElementById('armourSearch'); 
+    const weaponSearchEl = document.getElementById('weaponSearch'); // NEW Ref
     
     const galleryModal = document.getElementById('galleryModal');
     const galleryImg = document.getElementById('galleryImg');
@@ -494,7 +662,7 @@
       body.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
     }
 
-    // search (debounced)
+    // search announcements (debounced)
     let searchTimeout = null;
     annSearchEl.addEventListener('input', e => {
       clearTimeout(searchTimeout);
@@ -510,6 +678,40 @@
         renderAnnouncements(filtered);
       }, 200);
     });
+
+    // ---------------- Custom Armour Search ----------------
+    if (armourSearchEl && craftsGrid) {
+        armourSearchEl.addEventListener('input', () => {
+            const query = String(armourSearchEl.value || '').trim().toLowerCase();
+            const items = craftsGrid.querySelectorAll('.photo-item');
+
+            items.forEach(item => {
+                const name = item.getAttribute('data-name');
+                if (name && name.toLowerCase().includes(query)) {
+                    item.style.display = 'flex'; // Show
+                } else {
+                    item.style.display = 'none';  // Hide
+                }
+            });
+        });
+    }
+    
+    // ---------------- Custom Weapon Search (NEW) ----------------
+    if (weaponSearchEl && weaponsGrid) {
+        weaponSearchEl.addEventListener('input', () => {
+            const query = String(weaponSearchEl.value || '').trim().toLowerCase();
+            const items = weaponsGrid.querySelectorAll('.photo-item');
+
+            items.forEach(item => {
+                const name = item.getAttribute('data-name');
+                if (name && name.toLowerCase().includes(query)) {
+                    item.style.display = 'flex'; // Show
+                } else {
+                    item.style.display = 'none';  // Hide
+                }
+            });
+        });
+    }
 
     // ---------------- copy IP ----------------
     async function copyIP(){
@@ -530,58 +732,84 @@
       setTimeout(()=> showToast('If Minecraft did not open, IP was copied'), 700);
     }
     
-    // Gallery button: Show and scroll to photos section
+    // Utility to manage section visibility
+    function toggleSection(sectionToShow, buttonTextToShow, sectionToHide1, buttonTextToHide1, sectionToHide2, buttonTextToHide2, storageKey) {
+        const isHidden = sectionToShow.classList.contains('hidden');
+        const sections = [photosSection, craftsSection, weaponsSection]; // All toggleable sections
+
+        sections.forEach(sec => {
+            if (sec === sectionToShow) {
+                if (isHidden) {
+                    sec.classList.remove('hidden');
+                    // Update button text for the section being shown
+                    document.getElementById(`toggle${sectionToShow.id.split('-')[0]}Btn`).textContent = `Hide ${buttonTextToShow}`;
+                    localStorage.setItem(storageKey, 'true');
+                } else {
+                    sec.classList.add('hidden');
+                    // Update button text for the section being hidden
+                    document.getElementById(`toggle${sectionToShow.id.split('-')[0]}Btn`).textContent = buttonTextToShow;
+                    localStorage.setItem(storageKey, 'false');
+                }
+            } else {
+                // Hide other sections and reset their button text
+                sec.classList.add('hidden');
+                let otherButton = null;
+                if (sec === photosSection) otherButton = toggleGalleryBtn;
+                else if (sec === craftsSection) otherButton = toggleCraftsBtn;
+                else if (sec === weaponsSection) otherButton = toggleWeaponsBtn;
+
+                if (otherButton) {
+                    let defaultText = '';
+                    if (sec === photosSection) defaultText = 'Photos';
+                    else if (sec === craftsSection) defaultText = 'Custom Armour';
+                    else if (sec === weaponsSection) defaultText = 'Custom Weapon';
+                    
+                    otherButton.textContent = defaultText;
+                    localStorage.setItem(sec.id === 'photos-section' ? 'showPhotos' : sec.id === 'crafts-section' ? 'showCrafts' : 'showWeapons', 'false');
+                }
+            }
+        });
+        
+        if (isHidden) {
+            sectionToShow.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+
+    // --- Section Button Event Listeners ---
+    // Photos
     if (toggleGalleryBtn && photosSection) {
-      // Check localStorage on page load
-      const showPhotos = localStorage.getItem('showPhotos') === 'true';
-      if (showPhotos) {
-        photosSection.classList.remove('hidden');
-        toggleGalleryBtn.textContent = 'Hide Photos';
-      }
-
-      toggleGalleryBtn.addEventListener('click', () => {
-        const isHidden = photosSection.classList.contains('hidden');
-        if (isHidden) {
-          photosSection.classList.remove('hidden');
-          craftsSection.classList.add('hidden'); // Hide other sections
-          localStorage.setItem('showPhotos', 'true');
-          localStorage.setItem('showCrafts', 'false');
-          toggleGalleryBtn.textContent = 'Hide Photos';
-          toggleCraftsBtn.textContent = 'Custom Crafts';
-          photosSection.scrollIntoView({ behavior: 'smooth' });
-        } else {
-          photosSection.classList.add('hidden');
-          localStorage.setItem('showPhotos', 'false');
-          toggleGalleryBtn.textContent = 'Photos';
-        }
-      });
+        const showPhotos = localStorage.getItem('showPhotos') === 'true';
+        if (showPhotos) photosSection.classList.remove('hidden');
+        toggleGalleryBtn.textContent = showPhotos ? 'Hide Photos' : 'Photos';
+        
+        toggleGalleryBtn.addEventListener('click', () => {
+            toggleSection(photosSection, 'Photos', craftsSection, 'Custom Armour', weaponsSection, 'Custom Weapon', 'showPhotos');
+        });
     }
 
-    // Custom Crafts button
+    // Custom Armour
     if (toggleCraftsBtn && craftsSection) {
-      const showCrafts = localStorage.getItem('showCrafts') === 'true';
-      if (showCrafts) {
-        craftsSection.classList.remove('hidden');
-        toggleCraftsBtn.textContent = 'Hide Crafts';
-      }
-
-      toggleCraftsBtn.addEventListener('click', () => {
-        const isHidden = craftsSection.classList.contains('hidden');
-        if (isHidden) {
-          craftsSection.classList.remove('hidden');
-          photosSection.classList.add('hidden'); // Hide other sections
-          localStorage.setItem('showCrafts', 'true');
-          localStorage.setItem('showPhotos', 'false');
-          toggleCraftsBtn.textContent = 'Hide Crafts';
-          toggleGalleryBtn.textContent = 'Photos';
-          craftsSection.scrollIntoView({ behavior: 'smooth' });
-        } else {
-          craftsSection.classList.add('hidden');
-          localStorage.setItem('showCrafts', 'false');
-          toggleCraftsBtn.textContent = 'Custom Crafts';
-        }
-      });
+        const showCrafts = localStorage.getItem('showCrafts') === 'true';
+        if (showCrafts) craftsSection.classList.remove('hidden');
+        toggleCraftsBtn.textContent = showCrafts ? 'Hide Armour' : 'Custom Armour';
+        
+        toggleCraftsBtn.addEventListener('click', () => {
+            toggleSection(craftsSection, 'Custom Armour', photosSection, 'Photos', weaponsSection, 'Custom Weapon', 'showCrafts');
+        });
     }
+    
+    // Custom Weapons (NEW)
+    if (toggleWeaponsBtn && weaponsSection) {
+        const showWeapons = localStorage.getItem('showWeapons') === 'true';
+        if (showWeapons) weaponsSection.classList.remove('hidden');
+        toggleWeaponsBtn.textContent = showWeapons ? 'Hide Weapon' : 'Custom Weapon';
+        
+        toggleWeaponsBtn.addEventListener('click', () => {
+            toggleSection(weaponsSection, 'Custom Weapon', photosSection, 'Photos', craftsSection, 'Custom Armour', 'showWeapons');
+        });
+    }
+
 
     // Photo Gallery Modal Logic
     if (photoGrid && galleryModal && galleryImg) {
@@ -592,11 +820,29 @@
         }
       });
     }
+    // Custom Armour Modal Logic
     if (craftsGrid && galleryModal && galleryImg) {
       craftsGrid.addEventListener('click', (event) => {
-        if (event.target.tagName === 'IMG') {
-          galleryImg.src = event.target.src;
-          galleryModal.style.display = 'flex';
+        const item = event.target.closest('.photo-item');
+        if (item) {
+            const img = item.querySelector('img');
+            if (img && img.src) {
+                galleryImg.src = img.src;
+                galleryModal.style.display = 'flex';
+            }
+        }
+      });
+    }
+    // Custom Weapons Modal Logic (NEW)
+    if (weaponsGrid && galleryModal && galleryImg) {
+      weaponsGrid.addEventListener('click', (event) => {
+        const item = event.target.closest('.photo-item');
+        if (item) {
+            const img = item.querySelector('img');
+            if (img && img.src) {
+                galleryImg.src = img.src;
+                galleryModal.style.display = 'flex';
+            }
         }
       });
     }
