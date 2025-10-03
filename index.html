@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kingamer Server — v.10 (AFK Bot Ready)</title>
+  <title>Kingamer Server — v.11</title>
 
   <style>
     :root{
@@ -229,7 +229,7 @@
               <div id="statusDot" class="status-dot" aria-hidden="true"></div>
               <div>
                 <div id="serverState" class="server-meta">Checking server status…</div>
-                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">40964</span></div>
+                <div id="serverDetails" class="server-sub">IP: <span id="serverAddr">Kingamer.aternos.me</span> · Port: <span id="serverPort">68586</span></div>
               </div>
             </div>
 
@@ -239,12 +239,7 @@
 
           <div id="onlineContent" style="display: none;">
             <div class="players" id="playerCount">—</div>
-            <div id="serverMOTD" class="server-sub" style="margin-top:8px">Welcome to the Kingamer server! Have fun.</div>
-            
-            <div id="playerListContainer" style="margin-top:12px; display: none;">
-              <div style="font-weight: 600; margin-bottom: 6px;">Online Players:</div>
-              <div id="playerList" class="muted" style="font-size: 0.9rem;"></div>
-            </div>
+            <div id="serverMOTD" class="server-sub" style="margin-top:8px"></div>
 
             <div class="server-actions" role="group" aria-label="Server actions">
               <button id="copyIP" class="btn ghost" title="Copy IP">Copy IP</button>
@@ -272,7 +267,7 @@
       <aside>
         <div class="card" aria-labelledby="info-title">
           <h2 id="info-title">Info</h2>
-          <p class="muted" style="margin-top:8px">The server is maintained by an AFK bot, keeping it **online 24/7** for easy access. Latest announcement is marked **NEW**. Today's announcements highlighted.</p>
+          <p class="muted" style="margin-top:8px">Server info and announcements are updated on page load. Latest announcement is marked <strong>NEW</strong>. Today's announcements highlighted.</p>
         </div>
         
         <section class="card hidden" id="photos-section" aria-labelledby="photos-title" style="margin-top:16px">
@@ -287,7 +282,7 @@
 
         <section class="card hidden" id="crafts-section" aria-labelledby="crafts-title" style="margin-top:16px">
           <h2 id="crafts-title">Custom Armour</h2>
-          <p class="muted" style="margin-top:8px">Here are all the custom armour sets and weapons available on the server. (Click to enlarge)</p>
+          <p class="muted" style="margin-top:8px">Here are all the custom armour sets available on the server. (Click to enlarge)</p>
           
           <input id="armourSearch" class="search-input" type="search" placeholder="Search armour by name..." aria-label="Search custom armour">
 
@@ -342,7 +337,16 @@
               <img src="https://i.imgur.com/rdPP838.png" alt="End Armour">
               <div class="photo-caption">End Armour</div>
             </div>
+            </div>
+        </section>
+        
+        <section class="card hidden" id="weapons-section" aria-labelledby="weapons-title" style="margin-top:16px">
+          <h2 id="weapons-title">Custom Weapon</h2>
+          <p class="muted" style="margin-top:8px">Here are the custom weapons available on the server. (Click to enlarge)</p>
+          
+          <input id="weaponSearch" class="search-input" type="search" placeholder="Search weapon by name..." aria-label="Search custom weapon">
 
+          <div class="photo-grid" id="weapons-grid">
             <div class="photo-item" data-name="Night Spear">
               <img src="https://i.imgur.com/ruL4lE7.png" alt="Night Spear">
               <div class="photo-caption">Night Spear</div>
@@ -367,7 +371,7 @@
               <img src="https://i.imgur.com/zDA5kHa.png" alt="Fire Staff">
               <div class="photo-caption">Fire Staff</div>
             </div>
-
+            
             <div class="photo-item" data-name="Custom craft 16">
               <img src="" alt="Custom craft 16">
               <div class="photo-caption">Custom craft 16</div>
@@ -392,71 +396,10 @@
               <img src="" alt="Custom craft 21">
               <div class="photo-caption">Custom craft 21</div>
             </div>
-            
           </div>
         </section>
-        
-        <section class="card hidden" id="weapons-section" aria-labelledby="weapons-title" style="margin-top:16px">
-          <h2 id="weapons-title">Custom Weapon</h2>
-          <p class="muted" style="margin-top:8px">Here are the custom weapons available on the server. (Click to enlarge)</p>
-          
-          <input id="weaponSearch" class="search-input" type="search" placeholder="Search weapon by name..." aria-label="Search custom weapon">
 
-          <div class="photo-grid" id="weapons-grid">
-            
-                        <div class="photo-item" data-name="Night Spear">
-              <img src="https://i.imgur.com/ruL4lE7.png" alt="Night Spear">
-              <div class="photo-caption">Night Spear</div>
-            </div>
-
-            <div class="photo-item" data-name="Double Sword">
-              <img src="https://i.imgur.com/8aE1k6X.png" alt="Double Sword">
-              <div class="photo-caption">Double Sword</div>
-            </div>
-
-            <div class="photo-item" data-name="Sun Axe">
-              <img src="https://i.imgur.com/bsbCU3l.png" alt="Sun Axe">
-              <div class="photo-caption">Sun Axe</div>
-            </div>
-
-            <div class="photo-item" data-name="Fire Sword">
-              <img src="https://i.imgur.com/a7tfI83.png" alt="Fire Sword">
-              <div class="photo-caption">Fire Sword</div>
-            </div>
-
-            <div class="photo-item" data-name="Fire Staff">
-              <img src="https://i.imgur.com/zDA5kHa.png" alt="Fire Staff">
-              <div class="photo-caption">Fire Staff</div>
-            </div>
-
-            <div class="photo-item" data-name="Custom craft 16">
-              <img src="" alt="Custom craft 16">
-              <div class="photo-caption">Custom craft 16</div>
-            </div>
-            <div class="photo-item" data-name="Custom craft 17">
-              <img src="" alt="Custom craft 17">
-              <div class="photo-caption">Custom craft 17</div>
-            </div>
-            <div class="photo-item" data-name="Custom craft 18">
-              <img src="" alt="Custom craft 18">
-              <div class="photo-caption">Custom craft 18</div>
-            </div>
-            <div class="photo-item" data-name="Custom craft 19">
-              <img src="" alt="Custom craft 19">
-              <div class="photo-caption">Custom craft 19</div>
-            </div>
-            <div class="photo-item" data-name="Custom craft 20">
-              <img src="" alt="Custom craft 20">
-              <div class="photo-caption">Custom craft 20</div>
-            </div>
-            <div class="photo-item" data-name="Custom craft 21">
-              <img src="" alt="Custom craft 21">
-              <div class="photo-caption">Custom craft 21</div>
-            </div>
-
-            </div>
-        </section>
-        </aside>
+      </aside>
     </div>
   </main>
 
@@ -473,7 +416,7 @@
           <p><a href="mailto:davidstha900@gmail.com">davidstha900@gmail.com</a></p>
           <a id="discordLink" href="discord://discord.com/channels/1370216217830494230/1370216218392264780" target="_blank" rel="noopener noreferrer" class="discord-btn" style="margin-top:12px">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M13.567 1.888C12.632 1.13 11.455.518 10.158.125A20.284 20.284 0 0 0 7.915 0a20.284 20.284 0 0 0-2.242.125C4.545.518 3.368 1.13 2.433 1.888A11.751 11.751 0 0 0 .546 5.678c.459-.444.975-.823 1.529-1.144a10.28 10.28 0 0 1 1.708-.946A15.751 15.751 0 0 0 7.915 3c2.039 0 4.026.49 5.864 1.488.554.321 1.07.7 1.529 1.144a11.75 11.75 0 0 0-1.887-3.79ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM7.915 12.25c-2.039 0-4.026-.49-5.864-1.488-.554-.321-1.07-.7-1.529-1.144a11.751 11.751 0 0 0 1.887 3.79c.958.749 2.135 1.361 3.432 1.754a20.284 20.284 0 0 0 2.242.125c2.039 0 4.026-.49 5.864-1.488.554-.321 1.07-.7 1.529-1.144a11.751 11.751 0 0 0-1.887-3.79c-.958-.749-2.135-1.361-3.432-1.754a20.284 20.284 0 0 0-2.242-.125Z"/>
+              <path d="M13.567 1.888C12.632 1.13 11.455.518 10.158.125A20.284 20.284 0 0 0 7.915 0a20.284 20.284 0 0 0-2.242.125C4.545.518 3.368 1.13 2.433 1.888A11.751 11.751 0 0 0 .546 5.678c.459-.444.975-.823 1.529-1.144a10.28 10.28 0 0 1 1.708-.946A15.751 15.751 0 0 0 7.915 3c2.039 0 4.026.49 5.864 1.488.554.321 1.07.7 1.529 1.144a11.75 11.75 0 0 0-1.887-3.79ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM9.176 9.423c-.78-.714-1.638-1.428-2.583-1.428-.945 0-1.803.714-2.583 1.428A11.77 11.77 0 0 0 2.8 11.835a11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54c-.958-2.417-2.617-3.99-3.854-5.322ZM7.915 14a12.77 12.77 0 0 1-5.115-1.54 11.77 11.77 0 0 0 5.115 1.54 11.77 11.77 0 0 0 5.115-1.54A12.77 12.77 0 0 1 7.915 14ZM7.915 12.25c-2.039 0-4.026-.49-5.864-1.488-.554-.321-1.07-.7-1.529-1.144a11.751 11.751 0 0 0 1.887 3.79c.958.749 2.135 1.361 3.432 1.754a20.284 20.284 0 0 0 2.242.125c2.039 0 4.026-.49 5.864-1.488.554-.321 1.07-.7-1.529-1.144a11.751 11.751 0 0 0-1.887-3.79c-.958-.749-2.135-1.361-3.432-1.754a20.284 20.284 0 0 0-2.242-.125Z"/>
             </svg>
             Join Discord VC
           </a>
@@ -500,8 +443,11 @@
 
     // ---------------- config ----------------
     const MC_HOST = 'Kingamer.aternos.me';
-    const MC_PORT = '40964'; 
+    const MC_PORT = '68586';
     const ANN_URL = 'https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json';
+    
+    // ⭐ Manual Server Status Toggle ⭐
+    const isServerOnline = true; 
 
     // ---------------- DOM refs ----------------
     const statusDot = document.getElementById('statusDot');
@@ -511,7 +457,6 @@
 
     const playerCountEl = document.getElementById('playerCount');
     const serverMOTDEl = document.getElementById('serverMOTD');
-    const playerListContainerEl = document.getElementById('playerListContainer');
 
     const annListEl = document.getElementById('annList');
     const annSearchEl = document.getElementById('annSearch');
@@ -522,15 +467,18 @@
 
     const toggleGalleryBtn = document.getElementById('toggleGalleryBtn');
     const toggleCraftsBtn = document.getElementById('toggleCraftsBtn');
-    const toggleWeaponsBtn = document.getElementById('toggleWeaponsBtn'); 
+    const toggleWeaponsBtn = document.getElementById('toggleWeaponsBtn'); // NEW Ref
+    
     const photosSection = document.getElementById('photos-section');
     const craftsSection = document.getElementById('crafts-section');
-    const weaponsSection = document.getElementById('weapons-section'); 
+    const weaponsSection = document.getElementById('weapons-section'); // NEW Ref
+    
     const photoGrid = document.querySelector('#photos-section .photo-grid');
     const craftsGrid = document.getElementById('crafts-grid');
-    const weaponsGrid = document.getElementById('weapons-grid'); 
-    const armourSearchEl = document.getElementById('armourSearch'); 
-    const weaponSearchEl = document.getElementById('weaponSearch'); 
+    const weaponsGrid = document.getElementById('weapons-grid'); // NEW Ref
+    
+    const armourSearchEl = document.getElementById('armourSearch');
+    const weaponSearchEl = document.getElementById('weaponSearch'); // NEW Ref
     
     const galleryModal = document.getElementById('galleryModal');
     const galleryImg = document.getElementById('galleryImg');
@@ -554,38 +502,30 @@
     function setStatusDot(online){ if (!statusDot) return; online ? statusDot.classList.add('online') : statusDot.classList.remove('online'); }
     function showToast(text, ms=1400){ if(!toastEl) return; toastEl.textContent = text; toastEl.classList.add('show'); setTimeout(()=> toastEl.classList.remove('show'), ms); }
     
-    function formatMotd(motd){
-      if (!motd) return '';
-      let html = escapeHtml(motd);
-      html = html.replace(/§l/g, '<strong>').replace(/§r/g, '</strong>').replace(/§[0-9a-fk-o]/g, '');
-      html = html.replace(/\r?\n/g, '<br>');
-      return html;
-    }
-
     // ---------------- main logic ----------------
-    async function updateServerStatus() {
-        // Hardcode the status to be always online with 1/10 players
-        
-        setStatusDot(true);
-        serverStateEl.textContent = 'Online';
-        onlineContentEl.style.display = 'block';
-        announcementsSectionEl.style.display = 'block';
-        
-        // Hardcoded Player Count (1 AFK bot / 10 max slots)
-        playerCountEl.textContent = `1 / 10`; 
-        
-        // Hide the player list section since we don't have real data
-        playerListContainerEl.style.display = 'none';
+    function updateServerStatus() {
+        if (isServerOnline) {
+            setStatusDot(true);
+            serverStateEl.textContent = 'Online';
+            onlineContentEl.style.display = 'block';
+            announcementsSectionEl.style.display = 'block';
+            
+            // Dummy data for online status
+            playerCountEl.textContent = '0 / 10';
+            serverMOTDEl.textContent = 'Welcome to the Kingamer server! Have fun.';
 
-        // Update the port display
-        document.getElementById('serverPort').textContent = MC_PORT;
-        
-        // Always try to fetch announcements
-        fetchAnnouncements();
+            fetchAnnouncements();
+        } else {
+            setStatusDot(false);
+            serverStateEl.textContent = 'Server is Offline';
+            onlineContentEl.style.display = 'none';
+            announcementsSectionEl.style.display = 'none';
+        }
     }
 
-    // ---------------- announcements ----------------
+    // ---------------- announcements (omitted for brevity, no changes) ----------------
     async function fetchAnnouncements(){
+      // ... (announcements logic from your provided code, no changes) ...
       try {
         annListEl.innerHTML = '<div class="muted">Loading announcements…</div>';
         const res = await fetch(ANN_URL, { cache: 'no-store' });
@@ -602,16 +542,12 @@
         } else {
             throw new Error('Invalid announcements data format.');
         }
-
         list = list.filter(item => typeof item === 'object');
-        
-        // sort newest-first securely
         list.sort((a,b) => {
           const ta = new Date(a.date || a._date || a.timestamp || 0).getTime();
           const tb = new Date(b.date || b._date || b.timestamp || 0).getTime();
           return tb - ta;
         });
-
         announcementsCache = list;
         renderAnnouncements(list);
       } catch (err) {
@@ -619,7 +555,6 @@
         annListEl.innerHTML = '<div class="muted" style="color:#d03">Failed to load announcements. Please check the GitHub URL.</div>';
       }
     }
-
     function isToday(dateString){
       if (!dateString) return false;
       const d = new Date(dateString);
@@ -627,10 +562,8 @@
       const n = new Date();
       return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate();
     }
-
     function renderAnnouncements(list){
       if (!Array.isArray(list) || list.length === 0) { annListEl.innerHTML = '<div class="muted">No announcements available.</div>'; return; }
-
       annListEl.innerHTML = '';
       list.forEach((item, idx) => {
         const title = escapeHtml(item.title || 'Announcement');
@@ -638,7 +571,6 @@
         const message = newlineToBreak(item.message || item.msg || item.body || '');
         const isNew = idx === 0;
         const highlight = isToday(item.date) ? 'highlight-today' : '';
-
         const wrapper = document.createElement('div');
         wrapper.className = 'ann-item ' + highlight;
         wrapper.innerHTML = `
@@ -656,14 +588,11 @@
         `;
         annListEl.appendChild(wrapper);
       });
-
-      // attach toggle handlers
       annListEl.querySelectorAll('.ann-head').forEach(head => {
         head.addEventListener('click', () => toggleAnn(head));
         head.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleAnn(head); } });
       });
     }
-
     function toggleAnn(head){
       const parent = head.parentElement;
       const body = parent.querySelector('.ann-body');
@@ -671,8 +600,6 @@
       parent.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       body.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
     }
-
-    // search announcements (debounced)
     let searchTimeout = null;
     annSearchEl.addEventListener('input', e => {
       clearTimeout(searchTimeout);
@@ -688,40 +615,33 @@
         renderAnnouncements(filtered);
       }, 200);
     });
+    // ---------------- END announcements ----------------
 
-    // ---------------- Custom Armour Search ----------------
-    if (armourSearchEl && craftsGrid) {
-        armourSearchEl.addEventListener('input', () => {
-            const query = String(armourSearchEl.value || '').trim().toLowerCase();
-            const items = craftsGrid.querySelectorAll('.photo-item');
 
-            items.forEach(item => {
-                const name = item.getAttribute('data-name');
-                if (name && name.toLowerCase().includes(query)) {
-                    item.style.display = 'flex'; // Show
-                } else {
-                    item.style.display = 'none';  // Hide
-                }
+    // ---------------- SEARCH FILTERS ----------------
+    function setupPhotoFilter(searchEl, gridEl) {
+        if (searchEl && gridEl) {
+            searchEl.addEventListener('input', () => {
+                const query = String(searchEl.value || '').trim().toLowerCase();
+                const items = gridEl.querySelectorAll('.photo-item');
+                items.forEach(item => {
+                    const name = item.getAttribute('data-name');
+                    // If no name attribute, fall back to caption text (if available)
+                    const caption = item.querySelector('.photo-caption')?.textContent || '';
+                    const displayName = name || caption;
+                    
+                    if (displayName && displayName.toLowerCase().includes(query)) {
+                        item.style.display = 'flex'; // Show
+                    } else {
+                        item.style.display = 'none';  // Hide
+                    }
+                });
             });
-        });
+        }
     }
-    
-    // ---------------- Custom Weapon Search ----------------
-    if (weaponSearchEl && weaponsGrid) {
-        weaponSearchEl.addEventListener('input', () => {
-            const query = String(weaponSearchEl.value || '').trim().toLowerCase();
-            const items = weaponsGrid.querySelectorAll('.photo-item');
+    setupPhotoFilter(armourSearchEl, craftsGrid);
+    setupPhotoFilter(weaponSearchEl, weaponsGrid); // NEW Weapon Search
 
-            items.forEach(item => {
-                const name = item.getAttribute('data-name');
-                if (name && name.toLowerCase().includes(query)) {
-                    item.style.display = 'flex'; // Show
-                } else {
-                    item.style.display = 'none';  // Hide
-                }
-            });
-        });
-    }
 
     // ---------------- copy IP ----------------
     async function copyIP(){
@@ -742,87 +662,79 @@
       setTimeout(()=> showToast('If Minecraft did not open, IP was copied'), 700);
     }
     
-    // Utility to manage section visibility
-    function toggleSection(sectionToShow, buttonTextToShow, sectionToHide1, buttonTextToHide1, sectionToHide2, buttonTextToHide2, storageKey) {
+    // ⭐ REFACTORED TOGGLE FUNCTION ⭐
+    // Handles showing one section, hiding others, updating button text, scrolling, and localStorage.
+    function toggleSection(sectionToShow, buttonTextToShow, storageKey) {
         const isHidden = sectionToShow.classList.contains('hidden');
         const sections = [photosSection, craftsSection, weaponsSection]; // All toggleable sections
 
         sections.forEach(sec => {
+            const secName = sec.id.split('-')[0]; // 'photos', 'crafts', 'weapons'
+            const button = document.getElementById(`toggle${secName.charAt(0).toUpperCase() + secName.slice(1)}Btn`);
+
             if (sec === sectionToShow) {
+                // This is the section being toggled ON/OFF
                 if (isHidden) {
                     sec.classList.remove('hidden');
-                    // Update button text for the section being shown
-                    document.getElementById(`toggle${sectionToShow.id.split('-')[0]}Btn`).textContent = `Hide ${buttonTextToShow}`;
+                    // Set button text to "Hide [Section Name]"
+                    button.textContent = `Hide ${buttonTextToShow}`;
                     localStorage.setItem(storageKey, 'true');
                     
-                    // ⭐ SCROLL FIX V2: Use setTimeout to ensure the element is visible 
-                    // before telling the browser to scroll to it.
+                    // Scroll into view immediately after removing the hidden class
                     setTimeout(() => {
                         sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 10);
+                    }, 10); // Small delay for rendering safety
                     
                 } else {
+                    // Hide the section
                     sec.classList.add('hidden');
-                    // Update button text for the section being hidden
-                    document.getElementById(`toggle${sectionToShow.id.split('-')[0]}Btn`).textContent = buttonTextToShow;
+                    button.textContent = buttonTextToShow; // Reset button text
                     localStorage.setItem(storageKey, 'false');
                 }
             } else {
-                // Hide other sections and reset their button text
+                // Hide other sections and reset their buttons/storage
                 sec.classList.add('hidden');
-                let otherButton = null;
-                if (sec === photosSection) otherButton = toggleGalleryBtn;
-                else if (sec === craftsSection) otherButton = toggleCraftsBtn;
-                else if (sec === weaponsSection) otherButton = toggleWeaponsBtn;
+                
+                let defaultText = '';
+                if (sec === photosSection) defaultText = 'Photos';
+                else if (sec === craftsSection) defaultText = 'Custom Armour';
+                else if (sec === weaponsSection) defaultText = 'Custom Weapon';
 
-                if (otherButton) {
-                    let defaultText = '';
-                    if (sec === photosSection) defaultText = 'Photos';
-                    else if (sec === craftsSection) defaultText = 'Custom Armour';
-                    else if (sec === weaponsSection) defaultText = 'Custom Weapon';
-                    
-                    otherButton.textContent = defaultText;
-                    localStorage.setItem(sec.id === 'photos-section' ? 'showPhotos' : sec.id === 'crafts-section' ? 'showCrafts' : 'showWeapons', 'false');
+                if (button) {
+                    button.textContent = defaultText;
                 }
+                localStorage.setItem(`show${secName.charAt(0).toUpperCase() + secName.slice(1)}`, 'false');
             }
         });
     }
 
+    // --- Section Button Event Listeners & Initialization ---
 
-    // --- Section Button Event Listeners ---
-    // Photos
-    if (toggleGalleryBtn && photosSection) {
-        const showPhotos = localStorage.getItem('showPhotos') === 'true';
-        if (showPhotos) photosSection.classList.remove('hidden');
-        toggleGalleryBtn.textContent = showPhotos ? 'Hide Photos' : 'Photos';
-        
-        toggleGalleryBtn.addEventListener('click', () => {
-            toggleSection(photosSection, 'Photos', craftsSection, 'Custom Armour', weaponsSection, 'Custom Weapon', 'showPhotos');
-        });
-    }
+    // Map buttons to their sections and default text
+    const toggleMap = [
+        { btn: toggleGalleryBtn, section: photosSection, text: 'Photos', key: 'showPhotos' },
+        { btn: toggleCraftsBtn, section: craftsSection, text: 'Custom Armour', key: 'showCrafts' },
+        { btn: toggleWeaponsBtn, section: weaponsSection, text: 'Custom Weapon', key: 'showWeapons' } // NEW
+    ];
 
-    // Custom Armour
-    if (toggleCraftsBtn && craftsSection) {
-        const showCrafts = localStorage.getItem('showCrafts') === 'true';
-        if (showCrafts) craftsSection.classList.remove('hidden');
-        toggleCraftsBtn.textContent = showCrafts ? 'Hide Armour' : 'Custom Armour';
-        
-        toggleCraftsBtn.addEventListener('click', () => {
-            toggleSection(craftsSection, 'Custom Armour', photosSection, 'Photos', weaponsSection, 'Custom Weapon', 'showCrafts');
-        });
-    }
-    
-    // Custom Weapons
-    if (toggleWeaponsBtn && weaponsSection) {
-        const showWeapons = localStorage.getItem('showWeapons') === 'true';
-        if (showWeapons) weaponsSection.classList.remove('hidden');
-        toggleWeaponsBtn.textContent = showWeapons ? 'Hide Weapon' : 'Custom Weapon';
-        
-        toggleWeaponsBtn.addEventListener('click', () => {
-            toggleSection(weaponsSection, 'Custom Weapon', photosSection, 'Photos', craftsSection, 'Custom Armour', 'showWeapons');
-        });
-    }
+    toggleMap.forEach(item => {
+        if (item.btn && item.section) {
+            // Initialization (Restore state from localStorage)
+            const isShown = localStorage.getItem(item.key) === 'true';
+            if (isShown) {
+                item.section.classList.remove('hidden');
+                item.btn.textContent = `Hide ${item.text}`;
+            } else {
+                item.section.classList.add('hidden');
+                item.btn.textContent = item.text;
+            }
 
+            // Click Handler
+            item.btn.addEventListener('click', () => {
+                toggleSection(item.section, item.text, item.key);
+            });
+        }
+    });
 
     // Photo Gallery Modal Logic
     if (photoGrid && galleryModal && galleryImg) {
@@ -846,7 +758,7 @@
         }
       });
     }
-    // Custom Weapons Modal Logic
+    // Custom Weapons Modal Logic (NEW)
     if (weaponsGrid && galleryModal && galleryImg) {
       weaponsGrid.addEventListener('click', (event) => {
         const item = event.target.closest('.photo-item');
