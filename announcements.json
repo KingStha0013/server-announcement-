@@ -1,15 +1,16 @@
 {
   "announcements": [
     {
-      "id" : 1,
+      "id": 1,
       "title": "NEW ITEM: Morphing Bracelet Added!",
-      "date": "10/05/2025",
-      "message": "We've added the new Morphing Bracelet! Check out the Custom Items tab for pictures and crafting details.\n\n*Key features:*\n1. Kill any mob with the bracelet in your inventory to **collect its morph**.\n2. **Crafting:** 4 Soul Soil + 1 Soul Glass Block (smelt Soul Sand).\n3. **Repair:** Hold the bracelet and stand on Soul Sand/Soil to repair its durability."
-    },  
+      "date": "2025-10-05",
+      "message": "We've added the new Morphing Bracelet! Check out the Custom Items tab for pictures and crafting details.\n\n*Key features:*\n1. Kill any mob with the bracelet in your inventory to **collect its morph**.\n2. **Crafting:** 4 Soul Soil + 1 Soul Glass Block (smelt Soul Sand).\n3. **Repair:** Hold the bracelet and stand on Soul Sand/Soil to repair its durability.",
+      "image": "https://i.imgur.com/WM82uRn.png"
+    },
     {
       "id": 2,
       "title": "🛠 Server Maintenance",
-      "date": "09/29/2025", 
+      "date": "2025-09-29",
       "location": "Whole Server",
       "message": "The server is currently running smoothly after recent maintenance. Thank you for your patience, and happy playing!"
     },
@@ -32,7 +33,7 @@
       "title": "Server Update",
       "date": "2025-10-02",
       "location": "Global",
-      "message": "A major update is coming tomorrow! The new update includes:1️⃣🗑 Trash Can Block – toss away unwanted items instantly.2️⃣⚙️ Item Filter System – keep your inventory clean and organized.3️⃣🌌Infinite Night Vision – see the world in eternal clarity, day or night!4️⃣🌀 Teleportation Magic – travel across the server faster than ever before.5️⃣💠 New Magical Items – discover enchanted tools with unique powers.6️⃣🎨 Fresh Models & Textures – magical blocks and items with brand-new looks."
+      "message": "A major update is coming tomorrow! The new update includes:\n1️⃣🗑 Trash Can Block – toss away unwanted items instantly.\n2️⃣⚙️ Item Filter System – keep your inventory clean and organized.\n3️⃣🌌 Infinite Night Vision – see the world in eternal clarity, day or night!\n4️⃣🌀 Teleportation Magic – travel across the server faster than ever before.\n5️⃣💠 New Magical Items – discover enchanted tools with unique powers.\n6️⃣🎨 Fresh Models & Textures – magical blocks and items with brand-new looks."
     }
   ]
 }
