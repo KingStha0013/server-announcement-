@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kingamer Server — v.11</title>
+  <title>Kingamer Server — v.13</title>
 
   <style>
     :root{
@@ -94,7 +94,16 @@
     .arrow{transition:transform .22s ease;display:inline-block;margin-left:6px}
     .ann-item.open .arrow{transform:rotate(90deg)}
 
-    /* server photos / custom armour / custom weapon grid */
+    /* Image inside announcement body */
+    .ann-body img {
+        max-width: 100%;
+        height: auto;
+        margin: 8px 0;
+        border-radius: 6px;
+    }
+
+
+    /* server photos / custom item grid */
     .photo-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -213,7 +222,9 @@
     <a href="https://www.mediafire.com/file/qqmxqhnwffcvc2b/FPS_Optimizer_v1.1.mcpack/file" class="btn secondary" target="_blank" rel="noopener noreferrer">MCPack</a>
     <button id="toggleGalleryBtn" class="btn secondary">Photos</button>
     <button id="toggleCraftsBtn" class="btn secondary">Custom Armour</button>
-    <button id="toggleWeaponsBtn" class="btn secondary">Custom Weapon</button> <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
+    <button id="toggleWeaponsBtn" class="btn secondary">Custom Weapon</button>
+    <button id="toggleItemsBtn" class="btn secondary">Custom Items</button>
+    <a class="btn secondary" id="linkReport" href="mailto:davidstha900@gmail.com?subject=Kingamer%20Server%20Report&body=Please%20describe%20the%20issue%20or%20feedback%20here.">Report</a>
   </div>
 
   <main class="container" role="main">
@@ -337,7 +348,7 @@
               <img src="https://i.imgur.com/rdPP838.png" alt="End Armour">
               <div class="photo-caption">End Armour</div>
             </div>
-            </div>
+          </div>
         </section>
         
         <section class="card hidden" id="weapons-section" aria-labelledby="weapons-title" style="margin-top:16px">
@@ -398,6 +409,44 @@
             </div>
           </div>
         </section>
+        
+        <section class="card hidden" id="items-section" aria-labelledby="items-title" style="margin-top:16px">
+          <h2 id="items-title">Custom Items: Morphing Bracelet</h2>
+          <p class="muted" style="margin-top:8px">Details and visuals for unique items. (Click to enlarge)</p>
+          
+          <input id="itemSearch" class="search-input" type="search" placeholder="Search item by name..." aria-label="Search custom item">
+
+          <div class="photo-grid" id="items-grid">
+            
+            <div class="photo-item" data-name="Morphing Bracelet">
+                <img src="https://i.imgur.com/placeholder-item.png" alt="Morphing Bracelet Item">
+                <div class="photo-caption">1. Morphing Bracelet</div>
+            </div>
+            <div class="photo-item" data-name="Morphing Bracelet Recipe">
+                <img src="https://i.imgur.com/placeholder-recipe.png" alt="Morphing Bracelet Recipe">
+                <div class="photo-caption">2. Crafting Recipe</div>
+            </div>
+            <div class="photo-item" data-name="Soul Glass Block">
+                <img src="https://i.imgur.com/placeholder-glass.png" alt="Soul Glass Block">
+                <div class="photo-caption">3. Soul Glass Block</div>
+            </div>
+            <div class="photo-item" data-name="Soul Sand Repair">
+                <img src="https://i.imgur.com/placeholder-repair.png" alt="Soul Sand Repair">
+                <div class="photo-caption">4. Repairing (Soul Sand)</div>
+            </div>
+            
+            </div>
+
+          <div style="margin-top: 16px; padding: 12px; background: var(--bg); border-radius: 8px;">
+            <h3 style="margin-top: 0; font-size: 1rem; color: var(--accent);">Morphing Bracelet Details</h3>
+            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Function:</strong> Gives players the ability to morph into different mobs.</p>
+            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Acquisition:</strong> Kill a mob while keeping a **Morphing Bracelet** in your inventory to collect its morph.</p>
+            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Crafting Recipe:</strong> 4x **Soul Soil** + 1x **Soul Glass Block**.</p>
+            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Soul Glass Block:</strong> Smelt **Soul Sand** in a furnace.</p>
+            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Repair:</strong> Hold the bracelet and stand on **Soul Sand** or **Soul Soil** to harness energy and repair its durability.</p>
+          </div>
+
+        </section>
 
       </aside>
     </div>
@@ -444,6 +493,9 @@
     // ---------------- config ----------------
     const MC_HOST = 'Kingamer.aternos.me';
     const MC_PORT = '68586';
+    // NOTE: For demo purposes, I'll temporarily use a fixed announcement list 
+    // to include the new Morphing Bracelet announcement. 
+    // In a real application, you'd update your announcements.json file.
     const ANN_URL = 'https://raw.githubusercontent.com/KingStha0013/server-announcement-/main/announcements.json';
     
     // ⭐ Manual Server Status Toggle ⭐
@@ -467,18 +519,23 @@
 
     const toggleGalleryBtn = document.getElementById('toggleGalleryBtn');
     const toggleCraftsBtn = document.getElementById('toggleCraftsBtn');
-    const toggleWeaponsBtn = document.getElementById('toggleWeaponsBtn'); // NEW Ref
+    const toggleWeaponsBtn = document.getElementById('toggleWeaponsBtn');
+    const toggleItemsBtn = document.getElementById('toggleItemsBtn');
     
     const photosSection = document.getElementById('photos-section');
     const craftsSection = document.getElementById('crafts-section');
-    const weaponsSection = document.getElementById('weapons-section'); // NEW Ref
+    const weaponsSection = document.getElementById('weapons-section');
+    const itemsSection = document.getElementById('items-section');
     
     const photoGrid = document.querySelector('#photos-section .photo-grid');
     const craftsGrid = document.getElementById('crafts-grid');
-    const weaponsGrid = document.getElementById('weapons-grid'); // NEW Ref
+    const weaponsGrid = document.getElementById('weapons-grid');
+    const itemsGrid = document.getElementById('items-grid'); // UPDATED Ref
+
     
     const armourSearchEl = document.getElementById('armourSearch');
-    const weaponSearchEl = document.getElementById('weaponSearch'); // NEW Ref
+    const weaponSearchEl = document.getElementById('weaponSearch');
+    const itemSearchEl = document.getElementById('itemSearch');
     
     const galleryModal = document.getElementById('galleryModal');
     const galleryImg = document.getElementById('galleryImg');
@@ -491,6 +548,17 @@
     const toastEl = document.getElementById('toast');
 
     // ---------------- state ----------------
+    // Custom announcement list to inject the new item announcement at the top
+    const customAnnouncements = [
+      {
+        "title": "NEW ITEM: Morphing Bracelet Added!",
+        "date": new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }),
+        "message": "We've added the new Morphing Bracelet! Check out the Custom Items tab for pictures and crafting details.\n\n*Key features:*\n1. Kill any mob with the bracelet in your inventory to **collect its morph**.\n2. **Crafting:** 4 Soul Soil + 1 Soul Glass Block (smelt Soul Sand).\n3. **Repair:** Hold the bracelet and stand on Soul Sand/Soil.",
+        // Example of adding an image to an announcement:
+        // "image": "https://i.imgur.com/placeholder-item.png" 
+      },
+      // You would fetch and append the rest of the announcements below this in a real scenario
+    ];
     let announcementsCache = [];
 
     // ---------------- helpers ----------------
@@ -523,38 +591,40 @@
         }
     }
 
-    // ---------------- announcements (omitted for brevity, no changes) ----------------
+    // ---------------- announcements (updated to use custom data) ----------------
     async function fetchAnnouncements(){
-      // ... (announcements logic from your provided code, no changes) ...
       try {
-        annListEl.innerHTML = '<div class="muted">Loading announcements…</div>';
+        // Fetch existing announcements
         const res = await fetch(ANN_URL, { cache: 'no-store' });
-        if (!res.ok) throw new Error('Announcements fetch ' + res.status);
-        const data = await res.json();
+        const fetchedData = res.ok ? await res.json() : [];
         
-        let list = [];
-        if (Array.isArray(data)) {
-            list = data;
-        } else if (data && typeof data === 'object' && Array.isArray(data.announcements)) {
-            list = data.announcements;
-        } else if (data && typeof data === 'object') {
-            list = Object.values(data);
-        } else {
-            throw new Error('Invalid announcements data format.');
+        let fetchedList = [];
+        if (Array.isArray(fetchedData)) {
+            fetchedList = fetchedData;
+        } else if (fetchedData && typeof fetchedData === 'object' && Array.isArray(fetchedData.announcements)) {
+            fetchedList = fetchedData.announcements;
+        } else if (fetchedData && typeof fetchedData === 'object') {
+            fetchedList = Object.values(fetchedData);
         }
-        list = list.filter(item => typeof item === 'object');
-        list.sort((a,b) => {
+        
+        // Filter and sort fetched list
+        fetchedList = fetchedList.filter(item => typeof item === 'object');
+        fetchedList.sort((a,b) => {
           const ta = new Date(a.date || a._date || a.timestamp || 0).getTime();
           const tb = new Date(b.date || b._date || b.timestamp || 0).getTime();
           return tb - ta;
         });
-        announcementsCache = list;
-        renderAnnouncements(list);
+
+        // Combine new custom announcement (at the top) with the fetched list
+        const finalAnnouncements = [...customAnnouncements, ...fetchedList];
+        announcementsCache = finalAnnouncements;
+        renderAnnouncements(finalAnnouncements);
       } catch (err) {
         console.warn('fetchAnnouncements error', err);
         annListEl.innerHTML = '<div class="muted" style="color:#d03">Failed to load announcements. Please check the GitHub URL.</div>';
       }
     }
+
     function isToday(dateString){
       if (!dateString) return false;
       const d = new Date(dateString);
@@ -562,15 +632,19 @@
       const n = new Date();
       return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate();
     }
+
     function renderAnnouncements(list){
       if (!Array.isArray(list) || list.length === 0) { annListEl.innerHTML = '<div class="muted">No announcements available.</div>'; return; }
+
       annListEl.innerHTML = '';
       list.forEach((item, idx) => {
         const title = escapeHtml(item.title || 'Announcement');
         const date = escapeHtml(item.date || '');
         const message = newlineToBreak(item.message || item.msg || item.body || '');
+        const image = item.image ? `<img src="${escapeHtml(item.image)}" alt="${title} image" />` : ''; // Handle optional image
         const isNew = idx === 0;
         const highlight = isToday(item.date) ? 'highlight-today' : '';
+
         const wrapper = document.createElement('div');
         wrapper.className = 'ann-item ' + highlight;
         wrapper.innerHTML = `
@@ -584,15 +658,18 @@
               <div class="muted" style="font-size:0.92rem"> <span class="arrow">▸</span> </div>
             </div>
           </div>
-          <div class="ann-body" aria-hidden="true"><div style="font-size:0.95rem;color:#222">${message}</div></div>
+          <div class="ann-body" aria-hidden="true"><div style="font-size:0.95rem;color:#222">${message}${image}</div></div>
         `;
         annListEl.appendChild(wrapper);
       });
+
+      // attach toggle handlers
       annListEl.querySelectorAll('.ann-head').forEach(head => {
         head.addEventListener('click', () => toggleAnn(head));
         head.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleAnn(head); } });
       });
     }
+
     function toggleAnn(head){
       const parent = head.parentElement;
       const body = parent.querySelector('.ann-body');
@@ -600,6 +677,7 @@
       parent.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       body.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
     }
+
     let searchTimeout = null;
     annSearchEl.addEventListener('input', e => {
       clearTimeout(searchTimeout);
@@ -615,35 +693,29 @@
         renderAnnouncements(filtered);
       }, 200);
     });
-    // ---------------- END announcements ----------------
-
 
     // ---------------- SEARCH FILTERS ----------------
-    function setupPhotoFilter(searchEl, gridEl) {
-        if (searchEl && gridEl) {
+    function setupFilter(searchEl, containerEl) {
+        if (searchEl && containerEl) {
             searchEl.addEventListener('input', () => {
                 const query = String(searchEl.value || '').trim().toLowerCase();
-                const items = gridEl.querySelectorAll('.photo-item');
+                // Select items based on the photo-item class
+                const items = containerEl.querySelectorAll('.photo-item');
+
                 items.forEach(item => {
                     const name = item.getAttribute('data-name');
-                    // If no name attribute, fall back to caption text (if available)
-                    const caption = item.querySelector('.photo-caption')?.textContent || '';
-                    const displayName = name || caption;
+                    const isMatch = name && name.toLowerCase().includes(query);
                     
-                    if (displayName && displayName.toLowerCase().includes(query)) {
-                        item.style.display = 'flex'; // Show
-                    } else {
-                        item.style.display = 'none';  // Hide
-                    }
+                    item.style.display = isMatch ? 'flex' : 'none'; // Photo items are display: flex
                 });
             });
         }
     }
-    setupPhotoFilter(armourSearchEl, craftsGrid);
-    setupPhotoFilter(weaponSearchEl, weaponsGrid); // NEW Weapon Search
+    setupFilter(armourSearchEl, craftsGrid);
+    setupFilter(weaponSearchEl, weaponsGrid);
+    setupFilter(itemSearchEl, itemsGrid); // Applying filter to the new items grid
 
-
-    // ---------------- copy IP ----------------
+    // ---------------- copy IP / quick actions ----------------
     async function copyIP(){
       const txt = MC_HOST + ':' + MC_PORT;
       try {
@@ -654,7 +726,6 @@
       }
     }
 
-    // ---------------- quick actions ----------------
     function openAternosPanel(){ window.open('https://aternos.org', '_blank'); }
     function openMinecraftUri(){
       const uri = `minecraft://?addExternalServer=Kingamer|${MC_HOST}:${MC_PORT}`;
@@ -662,59 +733,58 @@
       setTimeout(()=> showToast('If Minecraft did not open, IP was copied'), 700);
     }
     
-    // ⭐ REFACTORED TOGGLE FUNCTION ⭐
-    // Handles showing one section, hiding others, updating button text, scrolling, and localStorage.
+    // ⭐ REFACTORED TOGGLE FUNCTION (Updated for 4 sections) ⭐
     function toggleSection(sectionToShow, buttonTextToShow, storageKey) {
         const isHidden = sectionToShow.classList.contains('hidden');
-        const sections = [photosSection, craftsSection, weaponsSection]; // All toggleable sections
+        // Include the new itemsSection
+        const sections = [photosSection, craftsSection, weaponsSection, itemsSection]; 
 
         sections.forEach(sec => {
-            const secName = sec.id.split('-')[0]; // 'photos', 'crafts', 'weapons'
+            const secName = sec.id.split('-')[0];
             const button = document.getElementById(`toggle${secName.charAt(0).toUpperCase() + secName.slice(1)}Btn`);
 
+            // Determine default button text for other sections
+            let defaultText = '';
+            if (sec === photosSection) defaultText = 'Photos';
+            else if (sec === craftsSection) defaultText = 'Custom Armour';
+            else if (sec === weaponsSection) defaultText = 'Custom Weapon';
+            else if (sec === itemsSection) defaultText = 'Custom Items';
+
             if (sec === sectionToShow) {
-                // This is the section being toggled ON/OFF
                 if (isHidden) {
                     sec.classList.remove('hidden');
-                    // Set button text to "Hide [Section Name]"
                     button.textContent = `Hide ${buttonTextToShow}`;
                     localStorage.setItem(storageKey, 'true');
                     
-                    // Scroll into view immediately after removing the hidden class
                     setTimeout(() => {
                         sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 10); // Small delay for rendering safety
-                    
+                    }, 10);
                 } else {
-                    // Hide the section
                     sec.classList.add('hidden');
-                    button.textContent = buttonTextToShow; // Reset button text
+                    button.textContent = defaultText; 
                     localStorage.setItem(storageKey, 'false');
                 }
             } else {
-                // Hide other sections and reset their buttons/storage
+                // Hide other sections
                 sec.classList.add('hidden');
-                
-                let defaultText = '';
-                if (sec === photosSection) defaultText = 'Photos';
-                else if (sec === craftsSection) defaultText = 'Custom Armour';
-                else if (sec === weaponsSection) defaultText = 'Custom Weapon';
-
                 if (button) {
                     button.textContent = defaultText;
                 }
-                localStorage.setItem(`show${secName.charAt(0).toUpperCase() + secName.slice(1)}`, 'false');
+                // Update storage for other sections
+                const otherKey = `show${secName.charAt(0).toUpperCase() + secName.slice(1)}`;
+                localStorage.setItem(otherKey, 'false');
             }
         });
     }
 
     // --- Section Button Event Listeners & Initialization ---
 
-    // Map buttons to their sections and default text
+    // Map buttons to their sections and default text (Updated for 4 sections)
     const toggleMap = [
         { btn: toggleGalleryBtn, section: photosSection, text: 'Photos', key: 'showPhotos' },
         { btn: toggleCraftsBtn, section: craftsSection, text: 'Custom Armour', key: 'showCrafts' },
-        { btn: toggleWeaponsBtn, section: weaponsSection, text: 'Custom Weapon', key: 'showWeapons' } // NEW
+        { btn: toggleWeaponsBtn, section: weaponsSection, text: 'Custom Weapon', key: 'showWeapons' },
+        { btn: toggleItemsBtn, section: itemsSection, text: 'Custom Items', key: 'showItems' }
     ];
 
     toggleMap.forEach(item => {
@@ -737,40 +807,22 @@
     });
 
     // Photo Gallery Modal Logic
-    if (photoGrid && galleryModal && galleryImg) {
-      photoGrid.addEventListener('click', (event) => {
-        if (event.target.tagName === 'IMG') {
-          galleryImg.src = event.target.src;
-          galleryModal.style.display = 'flex';
+    const allGrids = [photoGrid, craftsGrid, weaponsGrid, itemsGrid]; // UPDATED to include itemsGrid
+    
+    allGrids.forEach(grid => {
+        if (grid && galleryModal && galleryImg) {
+            grid.addEventListener('click', (event) => {
+                // Check if the click was directly on an image, or inside a photo-item
+                const item = event.target.closest('.photo-item');
+                const img = event.target.tagName === 'IMG' ? event.target : item ? item.querySelector('img') : null;
+                
+                if (img && img.src && img.src.length > 0) {
+                    galleryImg.src = img.src;
+                    galleryModal.style.display = 'flex';
+                }
+            });
         }
-      });
-    }
-    // Custom Armour Modal Logic
-    if (craftsGrid && galleryModal && galleryImg) {
-      craftsGrid.addEventListener('click', (event) => {
-        const item = event.target.closest('.photo-item');
-        if (item) {
-            const img = item.querySelector('img');
-            if (img && img.src) {
-                galleryImg.src = img.src;
-                galleryModal.style.display = 'flex';
-            }
-        }
-      });
-    }
-    // Custom Weapons Modal Logic (NEW)
-    if (weaponsGrid && galleryModal && galleryImg) {
-      weaponsGrid.addEventListener('click', (event) => {
-        const item = event.target.closest('.photo-item');
-        if (item) {
-            const img = item.querySelector('img');
-            if (img && img.src) {
-                galleryImg.src = img.src;
-                galleryModal.style.display = 'flex';
-            }
-        }
-      });
-    }
+    });
 
     // Global modal close listeners
     if (galleryModal) {
@@ -815,3 +867,4 @@
   </script>
 </body>
 </html>
+
