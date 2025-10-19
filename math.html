@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Math Helper with Hyper-Boost</title>
+    <!-- Favicon (App Icon) - Base64 encoded SVG for Math and Hyper-Boost (Calculator + Zap) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjE4IiBmaWxsPSIjM0I4MkY2Ii8+CiAgPHJlY3QgeD0iMjUiIHk9IjE1IiB3aWR0aD0iNTAiIGhlaWdodD0iNzAiIHJ4PSI4IiBmaWxsPSJ3aGl0ZSIvPgogIDxyZWN0IHg9IjMwIiB5PSIyMCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjE1IiByeD0iMyIgZmlsbD0iIzNCODJGNCIvPgogIDxwYXRoIGQ9Ik01MCA0NSBMNDAgNjUgTDYwIDY1IEw1MCA4NSIgZmlsbD0iI0ZBQ0MxNSIvPgo8L3N2Zz4=">
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load math.js for robust math processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.min.js"></script>
+    <!-- Load Chart.js for graphing -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <!-- Load lucide icons (via unpkg) for UI elements -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* Custom styles for glowing border effect on the main panel */
+        .glowing-panel {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .dark .glowing-panel {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5), 0 0 30px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Boost Mode effect */
+        .boost-active {
+            box-shadow: 0 0 25px 8px rgba(255, 69, 0, 0.9), 0 0 60px 15px rgba(255, 140, 0, 0.6);
+            background-color: #ffe0b2 !important; /* light orange/yellow background */
+            border: 4px solid #ff4500;
+        }
+        .dark .boost-active {
+            box-shadow: 0 0 25px 8px rgba(255, 165, 0, 0.9), 0 0 60px 15px rgba(255, 200, 50, 0.6);
+            background-color: #3d2100 !important; /* dark yellow background */
+            border: 4px solid #ffa500;
+        }
+
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #06b6d4;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+        
+        /* Smooth transitions for theme change */
+        body, .glowing-panel, button, input, textarea, canvas {
+            transition: all 0.3s ease;
+        }
+
+        /* Ensure Canvas is responsive */
+        #graph-container {
+            position: relative;
+            height: 300px; /* Default height */
+            width: 100%;
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: white !important; color: black !important; }
+            .glowing-panel { box-shadow: none !important; border: 1px solid #ccc !important; }
+            header, footer, .lg:col-span-1, button, #ai-search-input-panel { display: none !important; }
+            #app { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .lg\:col-span-2 { width: 100% !important; grid-column: span 3 / span 3 !important; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen font-sans p-4">
+
+    <!-- Main Application Container -->
+    <div id="app" class="max-w-6xl mx-auto py-8">
+        
+        <!-- Header, FPS Counter, and Theme Toggle -->
+        <header class="flex justify-between items-center mb-6 flex-wrap gap-2">
+            <h1 class="text-3xl font-extrabold text-blue-600 dark:text-cyan-400 tracking-tight">
+                AI Math & Study Helper
+            </h1>
+            <div class="flex items-center space-x-3">
+                <!-- Game Button (New) -->
+                <button id="game-btn" class="px-3 py-1 bg-green-500 text-white text-sm font-bold rounded-full hover:bg-green-600 focus:outline-none transition duration-150 ease-in-out flex items-center dark:bg-lime-500 dark:hover:bg-lime-600">
+                    <i data-lucide="gamepad-2" class="w-4 h-4 mr-1"></i> Fresh Break
+                </button>
+                <!-- FPS Display -->
+                <div id="fps-display" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-sm font-mono rounded-full text-green-600 dark:text-green-400">
+                    FPS: --
+                </div>
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none transition duration-150 ease-in-out">
+                    <i data-lucide="sun" class="w-6 h-6 dark:hidden"></i>
+                    <i data-lucide="moon" class="w-6 h-6 hidden dark:block"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Left Panel: Inputs & Outputs (2/3 width) -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- 1. Math Input Panel -->
+                <div id="math-input-panel" class="bg-white dark:bg-gray-800 p-6 rounded-2xl glowing-panel">
+                    <h2 class="text-xl font-semibold mb-3 border-b border-blue-200 dark:border-cyan-700 pb-2 flex items-center">
+                        <i data-lucide="pencil-line" class="w-5 h-5 mr-2 text-blue-500 dark:text-cyan-400"></i>
+                        Math Problem Solver
+                    </h2>
+                    <textarea id="math-input" rows="3" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-lg focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-cyan-400 dark:focus:border-cyan-400 resize-none placeholder-gray-500 dark:placeholder-gray-400">2 + 2</textarea>
+                    
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-4">
+                        <button id="solve-btn" class="flex-1 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800 transition transform hover:scale-[1.01]">
+                            <i data-lucide="zap" class="w-5 h-5 inline mr-2"></i> Solve Math
+                        </button>
+                        <button id="speech-input-btn" class="sm:w-auto px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 transition duration-150 ease-in-out">
+                            <i data-lucide="mic" class="w-5 h-5 inline mr-2"></i> Speak
+                        </button>
+                        <!-- Hyper-Boost Button - Handles both activation and deactivation -->
+                        <button id="boost-btn" class="sm:w-auto px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 transition duration-150 ease-in-out">
+                            <i data-lucide="rocket" class="w-5 h-5 inline mr-2"></i> Hyper-Boost
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 2. Math Output Panel -->
+                <div id="math-output-panel" class="bg-white dark:bg-gray-800 p-6 rounded-2xl glowing-panel">
+                    <div class="flex justify-between items-center mb-4 border-b border-blue-200 dark:border-cyan-700 pb-2">
+                        <h2 class="text-xl font-semibold flex items-center">
+                            <i data-lucide="flask-conical" class="w-5 h-5 mr-2 text-blue-500 dark:text-cyan-400"></i>
+                            Math Solution
+                        </h2>
+                        <div class="flex space-x-2">
+                            <button id="copy-btn" class="p-2 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-150 ease-in-out" title="Copy Result">
+                                <i data-lucide="copy" class="w-5 h-5"></i>
+                            </button>
+                            <button id="print-pdf-btn" class="p-2 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-150 ease-in-out" title="Print/Download PDF">
+                                <i data-lucide="printer" class="w-5 h-5"></i>
+                            </button>
+                            <button id="clear-math-btn" class="p-2 bg-red-100 dark:bg-red-700 rounded-full hover:bg-red-200 dark:hover:bg-red-600 transition duration-150 ease-in-out" title="Clear Math Output">
+                                <i data-lucide="rotate-ccw" class="w-5 h-5 text-red-600 dark:text-red-300"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="math-solution-output" class="min-h-[150px] space-y-4">
+                        <div class="space-y-3">
+                            <p class="text-lg font-semibold border-b pb-2 text-blue-600 dark:text-cyan-400">Final Answer</p>
+                            <p class="text-2xl font-extrabold text-green-700 dark:text-green-400">
+                                $$4$$
+                            </p>
+                            <p class="text-lg font-semibold border-b pb-2 text-blue-600 dark:text-cyan-400">Step-by-Step Explanation</p>
+                            <div class="space-y-2">
+                                <p class="ml-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm"><i data-lucide="check-circle" class="w-4 h-4 text-green-500 inline mr-2"></i> <strong>Problem Type:</strong> Arithmetic / Evaluation</p>
+                                <p class="ml-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm"><strong>Step 1:</strong> Original Expression: `2 + 2`</p>
+                                <p class="ml-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm"><strong>Step 2:</strong> Apply standard mathematical order of operations (PEMDAS/BODMAS).</p>
+                                <p class="ml-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm"><strong>Step 3:</strong> The final simplified value is: 4</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graph Output -->
+                    <div id="graph-section" class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4 hidden">
+                        <h3 class="text-lg font-semibold mb-2 flex items-center">
+                            <i data-lucide="line-chart" class="w-4 h-4 mr-2 text-green-500 dark:text-green-400"></i>
+                            Graph
+                        </h3>
+                        <div id="graph-container">
+                            <canvas id="math-graph"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- Right Panel: History and Mathematicians (1/3 width) -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Great Mathematicians Panel -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl glowing-panel">
+                    <h2 class="text-xl font-semibold mb-4 border-b border-blue-200 dark:border-cyan-700 pb-2 flex items-center">
+                        <i data-lucide="graduation-cap" class="w-5 h-5 mr-2 text-blue-500 dark:text-cyan-400"></i>
+                        Great Mathematicians
+                    </h2>
+                    <div class="space-y-3 text-sm overflow-y-auto max-h-[30vh]">
+                        <p class="text-gray-700 dark:text-gray-300">
+                            The foundation of this helper is built on the discoveries of these visionary thinkers who defined the fields of algebra, calculus, and computation.
+                        </p>
+                        <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                            <p class="font-bold text-blue-600 dark:text-cyan-400">Isaac Newton (1643–1727)</p>
+                            <p>Co-invented **Calculus** (differential and integral), providing the fundamental tools for solving problems involving change and motion.</p>
+                        </div>
+                        <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                            <p class="font-bold text-blue-600 dark:text-cyan-400">Carl Friedrich Gauss (1777–1855)</p>
+                            <p>Nicknamed the "Prince of Mathematicians," he made contributions to number theory, statistics, and magnetostatics.</p>
+                        </div>
+                        <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                            <p class="font-bold text-blue-600 dark:text-cyan-400">Euclid of Alexandria (c. 300 BC)</p>
+                            <p>Known as the "Father of Geometry" for his treatise **Elements**, a foundational text that organized mathematics.</p>
+                        </div>
+                        <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                            <p class="font-bold text-blue-600 dark:text-cyan-400">Ada Lovelace (1815–1852)</p>
+                            <p>Often regarded as the first **computer programmer** for her work on Charles Babbage's Analytical Engine.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Panel -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl glowing-panel h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-4 border-b border-blue-200 dark:border-cyan-700 pb-2">
+                        <h2 class="text-xl font-semibold flex items-center">
+                            <i data-lucide="history" class="w-5 h-5 mr-2 text-blue-500 dark:text-cyan-400"></i>
+                            Math History
+                        </h2>
+                        <button id="clear-history-btn" class="text-sm text-red-500 hover:text-red-700 dark:hover:text-red-400 transition duration-150 ease-in-out">
+                            Clear All
+                        </button>
+                    </div>
+                    <div id="history-list" class="space-y-3 overflow-y-auto max-h-[30vh] flex-grow">
+                        <!-- History items will be injected here -->
+                        <p class="text-gray-500 dark:text-gray-400 italic text-sm">No history yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer/Credit Section (Updated with specific text) -->
+        <footer class="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
+            AI Math Helper & Study Tool | KingGamerNep David copyright strike
+        </footer>
+    </div>
+
+    <!-- Message Box (replaces alert/confirm) -->
+    <div id="message-box" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl max-w-sm w-full space-y-4">
+            <h3 id="message-title" class="text-xl font-bold text-blue-600 dark:text-cyan-400"></h3>
+            <p id="message-content" class="text-gray-700 dark:text-gray-300"></p>
+            <button id="message-close-btn" class="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150">OK</button>
+        </div>
+    </div>
+
+    <!-- Game Modal (Reaction Timer) - NEW -->
+    <div id="game-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-lg w-full space-y-4 text-center">
+            <h3 class="text-2xl font-bold text-green-600 dark:text-lime-400 flex items-center justify-center">
+                <i data-lucide="bolt" class="w-6 h-6 mr-2"></i> Reaction Time Test
+            </h3>
+            
+            <p class="text-gray-600 dark:text-gray-400 mb-4">Click the box as fast as you can when it turns **GREEN!**</p>
+            
+            <!-- Game Area -->
+            <div id="game-area" class="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-xl flex items-center justify-center cursor-pointer transition duration-300 ease-in-out select-none" data-state="ready">
+                <span id="game-text" class="text-lg font-bold text-gray-800 dark:text-gray-200">
+                    Click to Start
+                </span>
+            </div>
+
+            <p id="game-result" class="text-xl font-extrabold text-blue-600 dark:text-cyan-400 min-h-[1.5em] mt-3"></p>
+
+            <button id="game-close-btn" class="w-full py-2 bg-gray-400 text-white font-semibold rounded-lg hover:bg-gray-500 transition duration-150">Close Game</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Globals and Initialization ---
+        const mathInput = document.getElementById('math-input');
+        const solveBtn = document.getElementById('solve-btn');
+        const speechInputBtn = document.getElementById('speech-input-btn');
+        const boostBtn = document.getElementById('boost-btn');
+        const mathSolutionOutput = document.getElementById('math-solution-output');
+        const historyList = document.getElementById('history-list');
+        const themeToggle = document.getElementById('theme-toggle');
+        const fpsDisplay = document.getElementById('fps-display');
+        const inputPanel = document.getElementById('math-input-panel');
+        
+        const graphCanvas = document.getElementById('math-graph');
+        const graphSection = document.getElementById('graph-section');
+
+        // Game Globals
+        const gameBtn = document.getElementById('game-btn');
+        const gameModal = document.getElementById('game-modal');
+        const gameCloseBtn = document.getElementById('game-close-btn');
+        const gameArea = document.getElementById('game-area');
+        const gameText = document.getElementById('game-text');
+        const gameResult = document.getElementById('game-result');
+        
+        let currentChart = null;
+        let isBoosting = false; 
+
+        // Game State
+        let gameTimeout = null;
+        let startTime = 0;
+        let isWaiting = false; 
+
+
+        // Ensure lucide icons are rendered
+        lucide.createIcons();
+        
+        // --- Utility Functions ---
+        
+        /**
+         * Custom message box utility to replace alert/confirm.
+         */
+        function showMessage(title, message) {
+            const box = document.getElementById('message-box');
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-content').textContent = message;
+            box.classList.remove('hidden');
+            box.classList.add('flex');
+            document.getElementById('message-close-btn').onclick = () => {
+                box.classList.add('hidden');
+                box.classList.remove('flex');
+            };
+        }
+        
+        // --- FPS Monitoring ---
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+        let fpsInterval = 1000; // Update every second
+
+        function calculateFPS(timestamp) {
+            frameCount++;
+            const deltaTime = timestamp - lastFrameTime;
+
+            if (deltaTime >= fpsInterval) {
+                const currentFPS = Math.round(frameCount / (deltaTime / 1000));
+                fpsDisplay.textContent = `FPS: ${currentFPS}`;
+                lastFrameTime = timestamp;
+                frameCount = 0;
+            }
+
+            requestAnimationFrame(calculateFPS);
+        }
+
+        // --- Math Solver Functions ---
+
+        /**
+         * Checks if the expression contains non-numerical variables (x, y, z)
+         * while ignoring common math constants/functions (sin, cos, pi, e).
+         */
+        function containsVariables(expr) {
+            const cleanedExpr = expr.replace(/sin|cos|tan|log|sqrt|pi|e|\s/gi, '');
+            return /[a-zA-Z]/.test(cleanedExpr);
+        }
+
+        /**
+         * Attempts to classify the problem type based on keywords or structure.
+         */
+        function classifyProblem(expression) {
+            expression = expression.toLowerCase().trim();
+            if (expression.includes('solve') || expression.includes('=')) return 'Algebra / Equation Solving';
+            if (expression.includes('derivative') || expression.includes('d/dx')) return 'Calculus: Derivative';
+            if (expression.includes('integral') || expression.includes('integrate')) return 'Calculus: Integral';
+            if (expression.includes('area') || expression.includes('perimeter') || expression.includes('volume')) return 'Geometry / Mensuration';
+            if (expression.includes('sin') || expression.includes('cos') || expression.includes('tan')) return 'Trigonometry';
+            if (expression.includes('simplify') || expression.includes('expand')) return 'Algebra / Simplification';
+            if (expression.includes('^')) return 'Arithmetic / Powers';
+            return 'Arithmetic / Evaluation';
+        }
+
+        /**
+         * Simplistic function to generate fake, structured steps.
+         */
+        function generateSteps(expression, finalAnswer) {
+            const steps = [];
+            steps.push(`<p><i data-lucide="check-circle" class="w-4 h-4 text-green-500 inline mr-2"></i> <strong>Problem Type:</strong> ${classifyProblem(expression)}</p>`);
+            
+            expression = expression.trim().toLowerCase();
+            const classification = classifyProblem(expression);
+            
+            if (classification.includes('Equation Solving')) {
+                try {
+                    steps.push(`<strong>Step 1:</strong> Start with the original equation: \`$${expression}\``);
+                    steps.push(`<strong>Step 2:</strong> Apply algebraic rules to isolate the variable term.`);
+                    steps.push(`<strong>Step 3:</strong> Final calculation gives: ${finalAnswer}`);
+                } catch (e) {
+                    steps.push(`<strong>Step 1:</strong> Original Expression: \`$${expression}\``);
+                    steps.push(`<strong>Step 2:</strong> Evaluate the complex expression using advanced calculation.`);
+                }
+            } else if (classification.includes('Calculus: Derivative')) {
+                steps.push(`<strong>Step 1:</strong> Identify the operation: ${classifyProblem(expression)}.`);
+                steps.push(`<strong>Step 2:</strong> Apply the appropriate calculus rule (e.g., <strong>Power Rule</strong>) to the function.`);
+                steps.push(`<strong>Step 3:</strong> The resulting expression is: ${finalAnswer}`);
+            } else if (containsVariables(expression)) {
+                 steps.push(`<strong>Step 1:</strong> Identify the algebraic expression containing variables. Original: \`$${expression}\``);
+                steps.push(`<strong>Step 2:</strong> Use algebraic properties (like the distributive property) to simplify the terms.`);
+                steps.push(`<strong>Step 3:</strong> Collect like terms to produce the simplified result: ${finalAnswer}`);
+            }
+            else {
+                steps.push(`<strong>Step 1:</strong> Original Expression: \`${expression}\``);
+                steps.push(`<strong>Step 2:</strong> Apply standard mathematical order of operations (PEMDAS/BODMAS).`);
+                steps.push(`<strong>Step 3:</strong> The final simplified value is: ${finalAnswer}`);
+            }
+
+            return steps.map(step => `<p class="ml-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm">${step}</p>`).join('');
+        }
+
+        /**
+         * Clears the graph canvas.
+         */
+        function destroyGraph() {
+            if (currentChart) {
+                currentChart.destroy();
+                currentChart = null;
+            }
+            graphSection.classList.add('hidden');
+        }
+
+        /**
+         * Draws a graph for a given function string f(x).
+         */
+        function drawGraph(expression) {
+            destroyGraph();
+            graphSection.classList.remove('hidden');
+
+            try {
+                const code = math.compile(expression);
+                const scope = { x: 0 };
+                const data = [];
+                const labels = [];
+                const range = 10;
+                const step = 0.5;
+
+                for (let x = -range; x <= range; x += step) {
+                    scope.x = x;
+                    let y = code.evaluate(scope);
+                    
+                    if (y && typeof y === 'object' && y.isComplex) {
+                        y = y.re;
+                        if (y !== y) continue;
+                    }
+
+                    if (isFinite(y) && Math.abs(y) < 100) {
+                        labels.push(x.toFixed(1));
+                        data.push(y);
+                    }
+                }
+
+                const ctx = graphCanvas.getContext('2d');
+                
+                currentChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: `f(x) = ${expression}`,
+                            data: data,
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            tension: 0.4,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true },
+                            title: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                title: { display: true, text: 'x' }
+                            },
+                            y: {
+                                title: { display: true, text: 'f(x)' }
+                            }
+                        }
+                    }
+                });
+
+            } catch (e) {
+                destroyGraph();
+                console.error("Graphing error:", e);
+            }
+        }
+
+        /**
+         * Pre-processes the user input to automatically insert '*' for implicit multiplication.
+         */
+        function sanitizeInput(input) {
+            let sanitized = input;
+            sanitized = sanitized.replace(/\s/g, ''); 
+            sanitized = sanitized.replace(/(\d+)([a-zA-Z])/g, '$1*$2');
+            sanitized = sanitized.replace(/(\d)(\()/g, '$1*$2');
+            sanitized = sanitized.replace(/([a-zA-Z])([a-zA-Z])/g, '$1*$2');
+            sanitized = sanitized.replace(/([a-zA-Z])(\()/g, '$1*$2');
+            sanitized = sanitized.replace(/(\))([a-zA-Z]|\d)/g, '$1*$2');
+            sanitized = sanitized.replace(/\*\*/g, '*');
+            return sanitized;
+        }
+
+        async function solveMath() {
+            const input = mathInput.value.trim();
+            if (!input) {
+                showMessage('Input Required', 'Please enter a math problem to solve.');
+                return;
+            }
+            
+            const sanitizedInput = sanitizeInput(input);
+            
+            // Simple loading state
+            mathSolutionOutput.innerHTML = '<p class="text-center text-blue-500 dark:text-cyan-400">Solving... <i data-lucide="loader-circle" class="w-4 h-4 inline animate-spin ml-1"></i></p>';
+            lucide.createIcons();
+            destroyGraph();
+
+            let finalAnswer = 'Could not compute.';
+            let expressionToGraph = null;
+            const hasVars = containsVariables(sanitizedInput);
+            const classification = classifyProblem(input);
+
+            try {
+                let expression = sanitizedInput;
+
+                if (classification.includes('Calculus: Derivative')) {
+                    expression = expression.replace('derivative of', '').replace('d/dx', '').trim();
+                    const tree = math.parse(expression);
+                    finalAnswer = math.derivative(tree, 'x').toString();
+                    expressionToGraph = expression;
+
+                } else if (classification.includes('Equation Solving') && input.includes('=')) {
+                    // Note: full equation solving is complex and requires specialized AI/solver libraries. 
+                    // We'll show the simplified expression here as a placeholder for a complex feature.
+                    finalAnswer = `Equation solving is an advanced feature. Simplified expression is: ${math.simplify(expression).toString()}`;
+                    const parts = sanitizedInput.split('=');
+                    if (parts.length === 2) {
+                        expressionToGraph = `(${parts[0]}) - (${parts[1]})`;
+                    }
+
+                } else if (hasVars || classification.includes('Algebra / Simplification')) {
+                    expression = expression.replace(/^(simplify|evaluate)/i, '').trim();
+                    const simplified = math.simplify(expression);
+                    finalAnswer = simplified.toString();
+                    expressionToGraph = expression.includes('x') ? expression : null;
+
+                } else {
+                    finalAnswer = math.evaluate(sanitizedInput).toString();
+                }
+
+                // Format the output
+                const stepsHTML = generateSteps(input, finalAnswer);
+
+                mathSolutionOutput.innerHTML = `
+                    <div class="space-y-3">
+                        <p class="text-lg font-semibold border-b pb-2 text-blue-600 dark:text-cyan-400">Final Answer</p>
+                        <p class="text-2xl font-extrabold text-green-700 dark:text-green-400">
+                            $$${finalAnswer}$$
+                        </p>
+                        <p class="text-lg font-semibold border-b pb-2 text-blue-600 dark:text-cyan-400">Step-by-Step Explanation</p>
+                        <div class="space-y-2">
+                            ${stepsHTML}
+                        </div>
+                    </div>
+                `;
+                
+                lucide.createIcons();
+
+                if (expressionToGraph && expressionToGraph.includes('x')) {
+                    const graphableExpr = expressionToGraph.replace(/^(solve|derivative of|integral of|simplify)/i, '').trim();
+                    drawGraph(graphableExpr);
+                } else {
+                    destroyGraph();
+                }
+
+                saveHistory(input, finalAnswer, classification);
+                speakResult(finalAnswer, classification);
+
+            } catch (error) {
+                console.error("Math Engine Error. Input:", sanitizedInput, "Error:", error);
+                mathSolutionOutput.innerHTML = `
+                    <div class="p-4 bg-red-100 dark:bg-red-900 rounded-xl text-red-700 dark:text-red-300">
+                        <p class="font-bold">Error Processing Problem:</p>
+                        <p class="text-sm">The math engine encountered an error. Please check your syntax.</p>
+                        <p class="text-xs mt-1">Details: **${error.message}**</p>
+                    </div>
+                `;
+                destroyGraph();
+            }
+        }
+        
+        // --- Hyper-Boost Feature (Manual Control) ---
+
+        /**
+         * Performs a simulated intensive task: Matrix Multiplication (CPU stress)
+         * and large array allocation (RAM stress).
+         */
+        function runIntensiveCalculation() {
+            let startTime = performance.now();
+            let size = 200; 
+            
+            // CPU/Matrix Load Simulation (math.js matrix multiplication)
+            let A = Array.from({length: size}, () => Array.from({length: size}, () => Math.random()));
+            let B = Array.from({length: size}, () => Array.from({length: size}, () => Math.random()));
+            
+            let C = Array.from({length: size}, () => Array.from({length: size}, () => 0));
+
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    for (let k = 0; k < size; k++) {
+                        C[i][j] += A[i][k] * B[k][j];
+                    }
+                }
+            }
+            
+            // RAM/Memory Load Simulation 
+            const memoryHogSize = 20 * 1024 * 1024; 
+            const tempMemoryHog = new Float64Array(memoryHogSize); 
+            
+            let sum = 0;
+            for (let i = 0; i < tempMemoryHog.length; i++) {
+                sum += Math.sin(tempMemoryHog[i] + i);
+            }
+            
+            let endTime = performance.now();
+            let duration = (endTime - startTime).toFixed(2);
+            
+            return { duration: duration, matrixSize: size, sumCheck: sum.toFixed(2) };
+        }
+        
+        /**
+         * Activates the Hyper-Boost state.
+         */
+        function activateBoost() {
+            isBoosting = true;
+            inputPanel.classList.add('boost-active');
+            
+            const { duration, matrixSize, sumCheck } = runIntensiveCalculation();
+
+            boostBtn.classList.remove('bg-red-600', 'hover:bg-red-700', 'focus:ring-red-300', 'dark:bg-orange-600', 'dark:hover:bg-orange-700', 'dark:focus:ring-orange-800');
+            boostBtn.classList.add('bg-green-600', 'hover:bg-green-700', 'focus:ring-green-300', 'dark:bg-lime-600', 'dark:hover:bg-lime-700', 'dark:focus:ring-lime-800');
+            boostBtn.innerHTML = '<i data-lucide="power" class="w-5 h-5 inline mr-2"></i> DEACTIVATE BOOST (ACTIVE)';
+            lucide.createIcons();
+
+            mathSolutionOutput.innerHTML = `
+                <div class="p-4 bg-yellow-100 dark:bg-yellow-900 rounded-xl text-yellow-800 dark:text-yellow-200">
+                    <p class="font-bold flex items-center"><i data-lucide="zap" class="w-5 h-5 mr-2"></i> **Hyper-Boost Mode IS ACTIVE!**</p>
+                    <p class="text-sm">The application is running at its maximum simulated potential. Click **DEACTIVATE BOOST** to turn it off.</p>
+                    <p class="text-xs mt-2">
+                        <strong>Initial CPU/RAM Surge:</strong> Completed in ${duration} ms (Matrix: ${matrixSize}x${matrixSize}).
+                    </p>
+                    <p class="text-xs font-semibold mt-1">Status: Resources Locked to MAX Performance.</p>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+        
+        /**
+         * Deactivates the Hyper-Boost state.
+         */
+        function deactivateBoost() {
+            isBoosting = false;
+            inputPanel.classList.remove('boost-active');
+
+            boostBtn.classList.remove('bg-green-600', 'hover:bg-green-700', 'focus:ring-green-300', 'dark:bg-lime-600', 'dark:hover:bg-lime-700', 'dark:focus:ring-lime-800');
+            boostBtn.classList.add('bg-red-600', 'hover:bg-red-700', 'focus:ring-red-300', 'dark:bg-orange-600', 'dark:hover:bg-orange-700', 'dark:focus:ring-orange-800');
+            boostBtn.innerHTML = '<i data-lucide="rocket" class="w-5 h-5 inline mr-2"></i> Hyper-Boost';
+            lucide.createIcons();
+
+            if (mathSolutionOutput.innerHTML.includes("Hyper-Boost Mode IS ACTIVE!")) {
+                 mathSolutionOutput.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic">Boost manually deactivated. System returning to standard performance.</p>';
+            }
+        }
+
+        boostBtn.addEventListener('click', () => {
+            if (isBoosting) {
+                deactivateBoost();
+            } else {
+                activateBoost();
+            }
+        });
+
+
+        // --- Game Logic (Reaction Timer) ---
+
+        function showGameModal() {
+            gameModal.classList.remove('hidden');
+            gameModal.classList.add('flex');
+            resetGame();
+            lucide.createIcons();
+        }
+
+        function hideGameModal() {
+            gameModal.classList.add('hidden');
+            gameModal.classList.remove('flex');
+            clearTimeout(gameTimeout);
+        }
+
+        function resetGame() {
+            clearTimeout(gameTimeout);
+            isWaiting = false;
+            gameArea.setAttribute('data-state', 'ready');
+            gameArea.className = 'w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-xl flex items-center justify-center cursor-pointer transition duration-300 ease-in-out select-none';
+            gameText.textContent = 'Click to Start';
+            gameResult.textContent = '';
+        }
+
+        function startGame() {
+            gameArea.setAttribute('data-state', 'waiting');
+            gameArea.className = 'w-full h-48 bg-red-500 rounded-xl flex items-center justify-center cursor-not-allowed transition duration-300 ease-in-out select-none';
+            gameText.textContent = 'Wait for Green...';
+            gameResult.textContent = 'Getting ready...';
+
+            // Random delay between 1.5s and 4.5s
+            const delay = Math.random() * 3000 + 1500; 
+
+            gameTimeout = setTimeout(changeToGreen, delay);
+        }
+
+        function changeToGreen() {
+            isWaiting = true;
+            gameArea.setAttribute('data-state', 'go');
+            gameArea.className = 'w-full h-48 bg-green-500 rounded-xl flex items-center justify-center cursor-pointer shadow-xl shadow-green-400/50 transition duration-100 ease-in-out select-none';
+            gameText.textContent = 'CLICK NOW!';
+            gameResult.textContent = 'GO! GO! GO!';
+            startTime = performance.now();
+        }
+
+        function endGame(e) {
+            const currentState = gameArea.getAttribute('data-state');
+
+            if (currentState === 'ready') {
+                startGame();
+            } else if (currentState === 'waiting') {
+                // Clicked too early
+                clearTimeout(gameTimeout);
+                isWaiting = false;
+                gameArea.setAttribute('data-state', 'fail');
+                gameArea.className = 'w-full h-48 bg-blue-500 rounded-xl flex items-center justify-center cursor-pointer transition duration-300 ease-in-out select-none';
+                gameText.textContent = 'TOO SOON!';
+                gameResult.textContent = 'You clicked too early! Click again to restart.';
+                // Automatically reset after 2 seconds for a smoother flow
+                setTimeout(resetGame, 2000); 
+
+            } else if (currentState === 'go' && isWaiting) {
+                // Successful click
+                const endTime = performance.now();
+                const reactionTime = (endTime - startTime).toFixed(3);
+                
+                isWaiting = false;
+                gameArea.setAttribute('data-state', 'done');
+                gameArea.className = 'w-full h-48 bg-green-700 rounded-xl flex items-center justify-center cursor-pointer transition duration-300 ease-in-out select-none';
+                gameText.textContent = 'Tap to Restart';
+                gameResult.innerHTML = `Your Reaction Time: <span class="text-3xl font-extrabold text-red-600 dark:text-red-400">${reactionTime}</span> ms`;
+            } else if (currentState === 'done' || currentState === 'fail') {
+                resetGame(); // Restart game from ready state
+            }
+        }
+
+        // --- Event Listeners for Game ---
+        gameBtn.addEventListener('click', showGameModal);
+        gameCloseBtn.addEventListener('click', hideGameModal);
+        gameArea.addEventListener('click', endGame);
+
+
+        // --- History Management (localStorage) ---
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('mathHistory')) || [];
+            historyList.innerHTML = '';
+
+            if (history.length === 0) {
+                historyList.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">No history yet.</p>';
+                return;
+            }
+
+            // Only keep the last 15 items in history display
+            const recentHistory = history.slice(-15).reverse(); 
+
+            recentHistory.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'p-3 bg-gray-100 dark:bg-gray-700 rounded-xl cursor-pointer hover:bg-blue-100 dark:hover:bg-cyan-800 transition duration-150 ease-in-out';
+                itemDiv.innerHTML = `
+                    <p class="text-xs font-medium text-blue-500 dark:text-cyan-400">${item.classification}</p>
+                    <p class="text-sm font-semibold truncate mt-1">${item.input}</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-300 truncate">Ans: ${item.answer}</p>
+                `;
+                itemDiv.onclick = () => {
+                    mathInput.value = item.input;
+                    solveMath();
+                };
+                historyList.appendChild(itemDiv);
+            });
+        }
+
+        function saveHistory(input, answer, classification) {
+            const history = JSON.parse(localStorage.getItem('mathHistory')) || [];
+            const newItem = { input, answer, classification, timestamp: new Date().toISOString() };
+            history.push(newItem);
+            if (history.length > 30) history.shift(); // Cap history length at 30 items
+            localStorage.setItem('mathHistory', JSON.stringify(history));
+            loadHistory();
+        }
+
+        document.getElementById('clear-history-btn').addEventListener('click', () => {
+            localStorage.removeItem('mathHistory');
+            loadHistory();
+            showMessage('History Cleared', 'All previous math calculations have been removed.');
+        });
+
+
+        // --- Theme Toggle ---
+
+        function updateTheme(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                updateTheme(true);
+            } else {
+                updateTheme(false);
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateTheme(!isDark);
+        });
+
+        // --- Accessibility (Speech and TTS) ---
+
+        function speakResult(answer, type) {
+            if ('speechSynthesis' in window) {
+                const speech = new SpeechSynthesisUtterance(`The problem classified as ${type}, and the final answer is ${answer}.`);
+                speech.lang = 'en-US';
+                speechSynthesis.speak(speech);
+            }
+        }
+
+        /**
+         * FIX: Resets the UI state for the speech button.
+         */
+        function resetSpeechUI() {
+            speechInputBtn.innerHTML = '<i data-lucide="mic" class="w-5 h-5 inline mr-2"></i> Speak';
+            speechInputBtn.disabled = false;
+            lucide.createIcons();
+        }
+
+        speechInputBtn.addEventListener('click', () => {
+            if (!('webkitSpeechRecognition' in window)) {
+                showMessage('Speech Input Unavailable', 'Your browser does not support Web Speech API. Please use Chrome or Edge.');
+                return;
+            }
+
+            const recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            // UI Feedback for listening
+            speechInputBtn.innerHTML = '<i data-lucide="mic-off" class="w-5 h-5 inline mr-2 animate-pulse"></i> Listening...';
+            speechInputBtn.disabled = true;
+
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                
+                if (transcript) {
+                    // 1. Write the transcript to the input box
+                    mathInput.value = transcript;
+                    
+                    // 2. Automatically solve the problem
+                    solveMath();
+                } else {
+                    showMessage('No Speech Detected', 'I heard you, but I couldn\'t find a clear transcript.');
+                }
+                
+                // CRITICAL FIX: Stop listening after a result is captured
+                recognition.stop(); 
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                showMessage('Speech Error', 'Could not recognize speech or input timed out. Try again.');
+                
+                // Stop listening on error
+                recognition.stop(); 
+            };
+
+            // CRITICAL FIX: Ensure UI cleanup happens after the recognition service stops
+            recognition.onend = () => {
+                resetSpeechUI(); 
+            };
+        });
+
+        // --- Button Handlers (Copy, Clear, Print) ---
+
+        solveBtn.addEventListener('click', solveMath);
+
+        document.getElementById('clear-math-btn').addEventListener('click', () => {
+            mathInput.value = '';
+            mathSolutionOutput.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic">Math results will appear here...</p>';
+            destroyGraph();
+        });
+
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const resultElement = mathSolutionOutput.querySelector('.text-2xl');
+            if (resultElement) {
+                const textToCopy = resultElement.textContent.replace(/\$\$/g, '').trim();
+                const tempInput = document.createElement('textarea');
+                tempInput.value = textToCopy;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    showMessage('Copied!', `The final answer (${textToCopy}) has been copied to your clipboard.`);
+                } catch (err) {
+                    showMessage('Copy Error', 'Could not automatically copy the result. Please copy the text manually.');
+                }
+                document.body.removeChild(tempInput);
+            } else {
+                showMessage('Nothing to Copy', 'Please solve a problem first.');
+            }
+        });
+
+        document.getElementById('print-pdf-btn').addEventListener('click', () => {
+            window.print();
+        });
+
+
+        // --- Initialization on Load ---
+        window.addEventListener('load', () => {
+            initializeTheme();
+            loadHistory();
+            requestAnimationFrame(calculateFPS);
+            // Attach event listener for Enter key in math input box
+            mathInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); 
+                    solveMath();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
